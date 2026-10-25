@@ -137,6 +137,15 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 .trk{border:1px solid var(--bd);background:var(--in);border-radius:20px;padding:20px;margin:18px 0}.trk h4{color:var(--ink)!important}
 #catForm{background:var(--card);border-radius:20px;padding:24px;border:1px solid var(--bd);margin-bottom:22px;max-width:640px}
 .bd.s-Готово{background:#dcf5e3;color:#15803d}[data-theme=dark] .bd.s-Готово{background:#0f2e1a;color:#6ee79a}
+.chips{margin-bottom:4px}.chip{display:inline-flex;gap:6px;align-items:center;background:var(--pl);color:var(--p);border-radius:99px;padding:5px 8px 5px 14px;font-size:14px;font-weight:600;margin:0 6px 6px 0}
+.cx{background:none;color:inherit;font-size:18px;line-height:1;padding:0 4px}.fprow{display:grid;grid-template-columns:1fr auto auto;gap:8px}@media(max-width:700px){.fprow{grid-template-columns:1fr}}
+#agForm{background:var(--card);border-radius:24px;padding:28px;border:1px solid var(--bd)}
+.agh{background:linear-gradient(135deg,var(--p),#4c1d95);color:#fff;border-radius:28px;padding:34px;position:relative;overflow:hidden;margin-bottom:22px}.agh:after{content:"";position:absolute;width:200px;height:200px;border-radius:50%;background:var(--y);right:-60px;top:-80px;opacity:.9}.agh>*{position:relative;z-index:1}
+.agb{display:inline-block;background:var(--y);color:#1b1033;font-family:Unbounded;font-weight:900;border-radius:99px;padding:6px 18px;margin-bottom:12px;letter-spacing:.12em}.agh h2{margin:0 0 6px}.agh p{color:#e6dcff;margin:0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:22px}.stp{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px}.stp p{color:var(--mut);font-size:14px;margin:4px 0 0}
+.stp b{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--y);color:#1b1033;margin-bottom:10px;font-family:Unbounded}
+.agt{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:24px;margin-bottom:22px}.agt h4{font-family:Unbounded;font-size:15px;color:var(--p);margin:20px 0 6px}.agt h4:first-child{margin-top:0}.agt p,.agt li{color:var(--mut);font-size:14.5px}.agt ul{padding-left:20px;margin:6px 0}.agt b{color:var(--ink)}
+label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16px 0 0}.chk input{width:auto;margin-top:5px}
 </style>
 </head>
 <body>
@@ -233,8 +242,9 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 <div class="adm" id="adm">
   <div class="ah"><span class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b> · Админ</span>
     <div style="display:flex;gap:8px"><button class="btn btn-o sm" id="aHome">На сайт</button><button class="btn btn-o sm" id="reload">Обновить</button><button class="btn btn-p sm" id="logout">Выйти</button></div></div>
-  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button><button data-t="Svc">Genius / BandLink <span id="scnt"></span></button><button data-t="Cat">Каталог</button><button data-t="Art">Артисты</button></div>
+  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button><button data-t="Svc">Genius / BandLink <span id="scnt"></span></button><button data-t="Cat">Каталог</button><button data-t="Art">Артисты</button><button data-t="Agr">Договоры V1X3N</button></div>
   <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div><div id="paneTix" hidden><div id="tlist"></div></div><div id="paneSvc" hidden><div id="slist"></div></div>
+  <div id="paneAgr" hidden><div id="aglist"></div></div>
   <div id="paneArt" hidden><div id="alist"></div></div>
   <div id="paneCat" hidden><form id="catForm"><h3 style="font-family:Unbounded;font-size:17px;margin-bottom:6px">Добавить релиз в каталог</h3><p class="hint">Каталог показывается на странице «О лейбле».</p>
     <label>Обложка *</label><input type="file" name="cover" accept="image/jpeg,image/png" required>
@@ -250,6 +260,7 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
     <button class="sb a" data-v="Home">🏠 Начало</button>
     <button class="sb" data-v="New">⬆️ Отгрузить релиз</button>
     <button class="sb" data-v="Art">🎤 Мои артисты</button>
+    <button class="sb" data-v="Agr">📜 Договор V1X3N</button>
     <button class="sb" data-v="Sup">💬 Поддержка</button>
     <button class="sb" id="cHome" style="margin-top:auto">🌐 На сайт</button>
     <button class="sb" id="cLogout">Выйти</button></aside>
@@ -264,6 +275,20 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
       <form id="relForm" hidden></form>
       <form id="albForm" hidden></form></div>
     <div id="vArt" hidden><div class="rowb"><h2>Мои артисты</h2><button class="btn btn-y sm" id="addArt">+ Создать артиста</button></div><p class="sub">Артисты, от имени которых вы выпускаете музыку. Первый артист — основной.</p><div id="artList"></div></div>
+    <div id="vAgr" hidden>
+      <div class="agh"><span class="agb">V1X3N</span><h2>Соглашение о размещении на V1X3N</h2><p>Необязательно · добровольно · отозвать можно в любой момент</p></div>
+      <div class="steps"><div class="stp"><b>1</b><strong>Вы подписываете</strong><p>Выбираете артиста и подтверждаете согласие.</p></div><div class="stp"><b>2</b><strong>Мы выбираем вручную</strong><p>Команда лейбла лично добавляет треки на площадку.</p></div><div class="stp"><b>3</b><strong>Слушают по Vixen ID</strong><p>Вход только по логину и паролю, которые выдаёт лейбл.</p></div></div>
+      <div class="agt"><h4>О площадке</h4><p><b>V1X3N</b> — закрытая музыкальная площадка Vixen Music Group. Каждый трек на ней отбирается и публикуется вручную владельцами лейбла. Слушать музыку можно только с персональным <b>Vixen ID</b>: логин и пароль выдаёт сам лейбл.</p>
+        <h4>Что вы разрешаете</h4><p>Вы разрешаете владельцам Vixen Music Group лично публиковать на V1X3N:</p><ul><li>песни выбранного вами артиста;</li><li>композиции с участием приглашённых исполнителей (feat.), в которых этот артист принимает участие.</li></ul>
+        <h4>Как это работает</h4><ul><li>Треки публикуются с названием, именем артиста и обложкой.</li><li>Прослушивание доступно только на площадке пользователям с Vixen ID; скачивание не предусмотрено.</li><li>Что и когда публиковать, лейбл решает вручную.</li></ul>
+        <h4>Права и гарантии</h4><ul><li>Разрешение неисключительное. Все права на музыку остаются у вас и других правообладателей.</li><li>Вы подтверждаете, что вправе дать это разрешение, а для совместных треков при необходимости получили согласие приглашённых исполнителей и других правообладателей.</li><li>Вознаграждение, если оно предусмотрено, определяется отдельным договором.</li></ul>
+        <h4>Отзыв и добровольность</h4><p>Подписывать соглашение необязательно: на выпуск релизов на стриминговые площадки оно не влияет. Согласие можно отозвать в этом разделе в любой момент, и лейбл снимет треки с V1X3N в разумный срок.</p></div>
+      <form id="agForm"><label>Артист *</label><select name="artist" id="agArt" required></select>
+        <label>Фамилия и имя подписанта *</label><span class="hint">Это ваша электронная подпись под соглашением.</span><input name="signer" required maxlength="150">
+        <label class="chk"><input type="checkbox" name="c1"> Я прочитал(а) условия и разрешаю владельцам Vixen Music Group лично публиковать песни этого артиста и композиции с его участием на площадке V1X3N.</label>
+        <label class="chk"><input type="checkbox" name="c2"> Я подтверждаю, что имею право дать это разрешение и получил(а) необходимые согласия приглашённых исполнителей.</label>
+        <button class="btn btn-y full" type="submit">Подписать соглашение</button><div class="msg" id="agMsg"></div></form>
+      <h3 style="margin:32px 0 14px">Мои соглашения</h3><div id="agList"></div></div>
     <div id="vSup" hidden><h2>Поддержка</h2><p class="sub">Опишите вопрос — ответ появится здесь же. Каждому запросу присваивается номер.</p>
       <form id="tkForm"><label>Тема обращения *</label><select name="topic" required><option value="">Выберите тему…</option><option>Проблема с релизом</option><option>Вопрос по модерации</option><option>Выплаты и отчётность</option><option>Авторские права и роялти</option><option>Снятие релиза с площадок</option><option>Технический вопрос по сайту</option><option>Другое</option></select>
         <label>Заголовок *</label><input name="subject" required maxlength="120" placeholder="Коротко о сути">
@@ -336,7 +361,7 @@ async function enter(user) {
   const { data, error } = await db.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
   closeAll();
   if (error) { alert("Не удалось проверить права админа: " + error.message); return; }
-  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); loadArtistsAdmin(); }
+  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); loadArtistsAdmin(); loadAgrAdmin(); }
   else openCab(user);
 }
 
@@ -390,7 +415,7 @@ $("#relForm").innerHTML = `
   <label>Название песни *</label><input name="title" required maxlength="150">
   <label>Версия</label><span class="hint">Укажите, если у песни есть версия в скобках, например (Clean), (Speed Up), (Remix).</span><input name="version" maxlength="80">
   <label>Артист *</label><select class="artSel" name="artist" required></select><span class="hint">Нужен другой артист? Создайте его в разделе «Мои артисты».</span>
-  <label>При участии исполнителя(ей)</label><span class="hint">Если в треке есть фит, укажите артистов через запятую. Например: Artist 1, Artist 2.</span><input name="feat" maxlength="200">
+  <label>При участии исполнителя(ей)</label><span class="hint">Если в треке есть фит, добавьте артистов из списка. Нужного нет — создайте его: у каждого артиста должен быть профиль с псевдонимом и минимум 3 площадками или соцсетями.</span><div class="fp"><div class="chips"></div><div class="fprow"><select class="fpSel"></select><button type="button" class="btn btn-o sm fpAdd">Добавить</button><button type="button" class="btn btn-o sm fpNew">+ Создать артиста</button></div></div>
   <label>Жанр *</label><select name="genre" required>${opts(GENRES, "Выберите жанр…")}</select>
   ${yn("instrumental", "Эта песня инструментальна? (без слов)")}
   ${yn("cover", "Эта песня кавер?")}
@@ -441,12 +466,12 @@ $("#relForm").onsubmit = async e => {
     const cp = dir + "/cover." + ext(cover), ap = dir + "/audio." + ext(audio);
     let r = await db.storage.from("releases").upload(cp, cover); if (r.error) throw r.error;
     r = await db.storage.from("releases").upload(ap, audio); if (r.error) throw r.error;
-    const data = { login: user.email, version: v("version"), artist: v("artist"), feat: v("feat"), genre: v("genre"), instrumental: y("instrumental"),
+    const data = { login: user.email, version: v("version"), artist: v("artist"), feat: featOf($("#relForm .fp")), genre: v("genre"), instrumental: y("instrumental"),
       cover: y("cover"), coverInfo: y("cover") ? { artist: v("coverArtist"), song: v("coverSong"), permission: y("coverPerm") } : null,
       language: v("lang"), digitalDate: v("dDigital"), originalDate: v("dOrig"), explicit: y("explicit"), country: v("country"),
       blockchain: y("blockchain"), publishing: y("publishing"), credits: cred };
     r = await db.from("releases").insert({ user_id: user.id, title: v("title"), data, cover_path: cp, audio_path: ap }); if (r.error) throw r.error;
-    f.reset(); $("#coverBox").hidden = true; $$("#relForm .crs").forEach(c => c.innerHTML = ""); ["w","p","pr","e1","e2"].forEach(k => addRow(k, $("#relForm")));
+    f.reset(); $$("#relForm .chip").forEach(c => c.remove()); $$(".fp").forEach(refreshFp); $("#coverBox").hidden = true; $$("#relForm .crs").forEach(c => c.innerHTML = ""); ["w","p","pr","e1","e2"].forEach(k => addRow(k, $("#relForm")));
     m.className = "msg ok"; m.textContent = "Релиз отправлен на модерацию! 💜";
     loadMine(); setTimeout(() => cabView("Home"), 1400);
   } catch (x) { console.error(x); err("Не удалось отправить: " + (x.message || x)); }
@@ -454,7 +479,7 @@ $("#relForm").onsubmit = async e => {
 };
 
 function cabView(v) {
-  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup"; $("#vArt").hidden = v !== "Art";
+  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup"; $("#vArt").hidden = v !== "Art"; $("#vAgr").hidden = v !== "Agr";
   $$("[data-v]").forEach(b => b.classList.toggle("a", b.dataset.v === v));
   if (v === "New") { $("#relForm").hidden = true; $("#albForm").hidden = true; $("#pk").hidden = false; $("#relMsg").textContent = ""; }
   window.scrollTo(0, 0); $("#cab").scrollTo({ top: 0, behavior: "smooth" });
@@ -475,7 +500,7 @@ window.delRel = async id => {
 };
 function openCab(user) {
   $("#uName").textContent = (user.email || "").split("@")[0];
-  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine(); refreshTix(); loadSvc(); loadArtists();
+  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine(); refreshTix(); loadSvc(); loadArtists(); loadAgr();
   if (ch) db.removeChannel(ch);
   ch = db.channel("rel-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "releases", filter: "user_id=eq." + user.id }, loadMine).on("postgres_changes", { event: "*", schema: "public", table: "tickets" }, () => refreshTix()).on("postgres_changes", { event: "*", schema: "public", table: "ticket_messages" }, () => refreshTix()).on("postgres_changes", { event: "*", schema: "public", table: "services" }, () => loadSvc()).subscribe();
 }
@@ -491,7 +516,7 @@ async function loadMine() {
 }
 
 // ================= АДМИН: релизы и вкладки =================
-$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); ["Apps", "Rels", "Tix", "Svc", "Cat", "Art"].forEach(n => $("#pane" + n).hidden = b.dataset.t !== n); });
+$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); ["Apps", "Rels", "Tix", "Svc", "Cat", "Art", "Agr"].forEach(n => $("#pane" + n).hidden = b.dataset.t !== n); });
 const YN = x => x ? "Да" : "Нет";
 async function loadRels() {
   const { data, error } = await db.from("releases").select("*").order("created_at", { ascending: false });
@@ -525,7 +550,7 @@ window.editReason = async id => {
 // выход (и из админки, и из кабинета артиста)
 const doLogout = async () => { await db.auth.signOut(); if (ch) { db.removeChannel(ch); ch = null; } $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); $("#arOv").classList.remove("show"); myArtists = []; document.body.style.overflow = ""; };
 $("#logout").onclick = doLogout; $("#cLogout").onclick = doLogout;
-$("#reload").onclick = () => { loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); loadArtistsAdmin(); };
+$("#reload").onclick = () => { loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); loadArtistsAdmin(); loadAgrAdmin(); };
 
 // ================= ТЕМА =================
 const setTheme = t => { document.documentElement.dataset.theme = t; $("#themeBtn").textContent = t === "dark" ? "☀️" : "🌙"; try { localStorage.setItem("theme", t); } catch (e) {} };
@@ -577,7 +602,7 @@ const CN = { w: "Писатели", p: "Издатели", pr: "Продюсер
 const trackHtml = id => `<div class="trk" data-id="${id}"><div class="rowb"><h4 style="margin:0">Трек <span class="tn"></span></h4><button type="button" class="btn btn-o sm rmt">Удалить трек</button></div>
   <label>Название песни *</label><input class="tTitle" required maxlength="150">
   <label>Версия</label><span class="hint">Укажите, если у песни есть версия в скобках, например (Clean), (Speed Up), (Remix).</span><input class="tVersion" maxlength="80">
-  <label>При участии исполнителя(ей)</label><span class="hint">Если в треке есть фит, укажите артистов через запятую. Например: Artist 1, Artist 2.</span><input class="tFeat" maxlength="200">
+  <label>При участии исполнителя(ей)</label><span class="hint">Если в треке есть фит, добавьте артистов из списка. Нужного нет — создайте его: у каждого артиста должен быть профиль с псевдонимом и минимум 3 площадками или соцсетями.</span><div class="fp"><div class="chips"></div><div class="fprow"><select class="fpSel"></select><button type="button" class="btn btn-o sm fpAdd">Добавить</button><button type="button" class="btn btn-o sm fpNew">+ Создать артиста</button></div></div>
   ${yn("ins" + id, "Эта песня инструментальна? (без слов)")}${yn("cov" + id, "Эта песня кавер?")}
   <div class="cb" hidden><div class="ct"><div><label>Исполнитель оригинала</label><input class="cA" maxlength="120"></div><div><label>Название оригинальной песни</label><input class="cS" maxlength="150"></div></div>${yn("cp" + id, "Получено ли разрешение правообладателя?")}</div>
   <label>Аудиофайл *</label><span class="hint">WAV или FLAC, не короче 60 секунд. Рекомендуем 16/24 бит, 44.1 кГц и выше, стерео. Без клиппинга и водяных знаков.</span><input type="file" class="tAudio" accept=".wav,.flac,audio/wav,audio/x-wav,audio/flac" required>
@@ -601,7 +626,7 @@ const renum = () => $$("#tracks .trk").forEach((t, i) => t.querySelector(".tn").
 function addTrack() {
   if ($$("#tracks .trk").length >= 30) return;
   const d = document.createElement("div"); d.innerHTML = trackHtml(++tid); const t = d.firstElementChild;
-  $("#tracks").append(t); ["w", "p", "pr", "e1", "e2"].forEach(k => addRow(k, t)); renum();
+  $("#tracks").append(t); ["w", "p", "pr", "e1", "e2"].forEach(k => addRow(k, t)); renum(); refreshFp(t.querySelector(".fp"));
 }
 addTrack(); addTrack();
 $("#pAlbum").onclick = () => { $("#pk").hidden = true; $("#albForm").hidden = false; };
@@ -630,7 +655,7 @@ $("#albForm").onsubmit = async e => {
     if (yy("cov") && (!q(".cA").value.trim() || !q(".cS").value.trim())) return err(tag + "для кавера укажите исполнителя и название оригинала.");
     const cred = {}; ["w", "p", "pr", "e1", "e2"].forEach(k => cred[k] = [...t.querySelectorAll(`.cg[data-k="${k}"] .cr`)].map(r => ({ name: r.querySelector("input").value.trim(), role: r.querySelector("select").value })).filter(x => x.name));
     if (["w", "p", "e1", "e2"].some(k => cred[k].some(x => !x.role))) return err(tag + "укажите роль для каждого автора.");
-    tracks.push({ file: au, title: q(".tTitle").value.trim(), version: q(".tVersion").value.trim(), feat: q(".tFeat").value.trim(), instrumental: yy("ins"), cover: yy("cov"),
+    tracks.push({ file: au, title: q(".tTitle").value.trim(), version: q(".tVersion").value.trim(), feat: featOf(q(".fp")), instrumental: yy("ins"), cover: yy("cov"),
       coverInfo: yy("cov") ? { artist: q(".cA").value.trim(), song: q(".cS").value.trim(), permission: yy("cp") } : null, language: q(".tLang").value, explicit: yy("ex"), credits: cred });
   }
   if (!await askSend("album", v("aTitle"))) return;
@@ -764,7 +789,7 @@ if (db) {
 
 // ================= АРТИСТЫ =================
 const LINKS = [["spotify","Spotify"],["apple","Apple Music"],["facebook","Facebook"],["twitter","Twitter"],["tiktok","TikTok"],["instagram","Instagram"],["snapchat","Snapchat"],["youtube","YouTube"],["soundcloud","SoundCloud"],["vevo","Vevo"],["website","Веб-сайт"],["audiomack","Audiomack"]];
-let myArtists = [], arForced = false;
+var myArtists = [], arForced = false, pendingFp = null;
 document.body.insertAdjacentHTML("beforeend", `
 <div class="ov2" id="arOv" style="z-index:75"><div class="md" style="max-width:640px"><button class="x" id="arX">×</button><h3 id="arH"></h3><p class="sub" id="arS"></p>
   <form id="arForm"><label>Псевдоним артиста *</label><input name="name" required maxlength="100">
@@ -784,13 +809,13 @@ function openArtistForm() {
   $("#arS").textContent = arForced ? "Чтобы пользоваться кабинетом, сначала создайте основного артиста: псевдоним и минимум 3 площадки или соцсети." : "Укажите псевдоним и минимум 3 площадки или соцсети.";
   $("#arX").hidden = arForced; $("#arOut").hidden = !arForced; $("#arOv").classList.add("show");
 }
-$("#arX").onclick = () => $("#arOv").classList.remove("show");
+$("#arX").onclick = () => { pendingFp = null; $("#arOv").classList.remove("show"); };
 $("#arOut").onclick = () => doLogout();
-$("#addArt").onclick = () => { arForced = false; openArtistForm(); };
+$("#addArt").onclick = () => { pendingFp = null; arForced = false; openArtistForm(); };
 const fillArt = () => $$(".artSel").forEach(sel => { const cur = sel.value; sel.innerHTML = myArtists.map((a, i) => `<option value="${esc(a.name)}">${esc(a.name)}${i === 0 ? " (основной)" : ""}</option>`).join(""); if (cur) sel.value = cur; });
 async function loadArtists() {
   const { data, error } = await db.from("artists").select("*").order("created_at"); if (error) { console.error(error); return; }
-  myArtists = data; fillArt();
+  myArtists = data; fillArt(); fillAgr(); $$(".fp").forEach(refreshFp);
   const S = db.storage.from("releases");
   const urls = await Promise.all(data.map(async a => { if (!a.avatar_path) return null; const x = await S.createSignedUrl(a.avatar_path, 3600); return x.data && x.data.signedUrl; }));
   $("#artList").innerHTML = data.map((a, i) => `<div class="rl">${urls[i] ? `<img src="${urls[i]}" alt="">` : `<div class="ph" style="display:grid;place-items:center;font-family:Unbounded;color:var(--p)">${esc(a.name.charAt(0).toUpperCase())}</div>`}<div style="flex:1"><b>${esc(a.name)}</b>${i === 0 ? ' <span class="bd s-Готово">основной</span>' : ""}<br><small style="color:var(--mut)">Площадок и соцсетей: ${Object.keys(a.links || {}).length}${a.bio ? " · " + esc(a.bio.slice(0, 90)) + (a.bio.length > 90 ? "…" : "") : ""}</small></div></div>`).join("");
@@ -814,7 +839,7 @@ $("#arForm").onsubmit = async e => {
     const { data: { user } } = await db.auth.getUser(); let ap = null;
     if (file) { ap = user.id + "/avatar_" + crypto.randomUUID() + "." + file.name.split(".").pop().toLowerCase(); const u = await db.storage.from("releases").upload(ap, file); if (u.error) throw u.error; }
     const r = await db.from("artists").insert({ user_id: user.id, login: user.email, name, bio: el.bio.value.trim() || null, avatar_path: ap, links }); if (r.error) throw r.error;
-    $("#arOv").classList.remove("show"); arForced = false; await loadArtists();
+    $("#arOv").classList.remove("show"); arForced = false; await loadArtists(); if (pendingFp) { addChip(pendingFp, name); pendingFp = null; }
   } catch (x) { console.error(x); err("Не удалось создать артиста: " + (x.message || x)); }
   btn.disabled = false;
 };
@@ -824,6 +849,58 @@ async function loadArtistsAdmin() {
   const urls = await Promise.all(data.map(async a => { if (!a.avatar_path) return null; const x = await S.createSignedUrl(a.avatar_path, 3600); return x.data && x.data.signedUrl; }));
   $("#alist").innerHTML = data.length ? data.map((a, i) => `<div class="ad">${urls[i] ? `<img src="${urls[i]}" alt="">` : ""}<div><h4 style="font-family:Unbounded">${esc(a.name)}</h4><small>${esc(a.login)} · ${new Date(a.created_at).toLocaleDateString("ru-RU")}</small>${a.bio ? `<p style="white-space:pre-wrap;margin:8px 0;color:var(--mut)">${esc(a.bio)}</p>` : ""}
     <div class="lk">${Object.entries(a.links || {}).map(([k, v]) => /^https?:\/\//i.test(v) ? `<span><b>${esc(nm[k] || k)}:</b> <a href="${esc(v)}" target="_blank" rel="noopener" style="color:var(--p)">${esc(v)}</a></span>` : "").join("")}</div></div></div>`).join("") : "<p>Артистов пока нет.</p>";
+}
+
+// ================= «ПРИ УЧАСТИИ»: выбор артистов =================
+function featOf(fp) { return [...fp.querySelectorAll(".chip")].map(c => c.dataset.name).join(", "); }
+function refreshFp(fp) {
+  if (!fp) return;
+  const main = (fp.closest("form").querySelector(".artSel") || {}).value;
+  fp.querySelectorAll(".chip").forEach(c => { if (c.dataset.name === main) c.remove(); });
+  const used = [...fp.querySelectorAll(".chip")].map(c => c.dataset.name), sel = fp.querySelector(".fpSel");
+  const av = (myArtists || []).filter(a => a.name !== main && !used.includes(a.name));
+  sel.innerHTML = av.length ? av.map(a => `<option value="${esc(a.name)}">${esc(a.name)}</option>`).join("") : '<option value="">Нет доступных артистов</option>';
+  fp.querySelector(".fpAdd").disabled = !av.length;
+}
+function addChip(fp, name) {
+  fp.querySelector(".chips").insertAdjacentHTML("beforeend", `<span class="chip" data-name="${esc(name)}">${esc(name)}<button type="button" class="cx" aria-label="Убрать">×</button></span>`);
+  refreshFp(fp);
+}
+document.addEventListener("click", e => {
+  const fp = e.target.closest(".fp"); if (!fp) return;
+  if (e.target.classList.contains("fpAdd")) { const v = fp.querySelector(".fpSel").value; if (v) addChip(fp, v); }
+  else if (e.target.classList.contains("cx")) { e.target.closest(".chip").remove(); refreshFp(fp); }
+  else if (e.target.classList.contains("fpNew")) { pendingFp = fp; arForced = false; openArtistForm(); }
+});
+document.addEventListener("change", e => { if (e.target.classList && e.target.classList.contains("artSel")) $$(".fp").forEach(refreshFp); });
+$$(".fp").forEach(refreshFp);
+
+// ================= СОГЛАШЕНИЕ V1X3N =================
+function fillAgr() { $("#agArt").innerHTML = myArtists.map((a, i) => `<option value="${esc(a.name)}">${esc(a.name)}${i === 0 ? " (основной)" : ""}</option>`).join(""); }
+const dt = x => new Date(x).toLocaleDateString("ru-RU");
+async function loadAgr() {
+  const { data, error } = await db.from("agreements").select("*").order("created_at", { ascending: false }); if (error) return;
+  $("#agList").innerHTML = data.length ? data.map(a => `<div class="rl"><div style="flex:1"><b>${esc(a.artist_name)}</b><br><small style="color:var(--mut)">Подписано: ${esc(a.signer_name)} · ${dt(a.created_at)}${a.revoked_at ? " · отозвано " + dt(a.revoked_at) : ""}</small></div><span class="bd s-${a.status === "Действует" ? "Готово" : "Закрыто"}">${esc(a.status)}</span>${a.status === "Действует" ? `<button class="btn btn-o sm" onclick="revokeAgr('${a.id}')">Отозвать</button>` : ""}</div>`).join("") : '<p class="emp">Вы ещё не подписывали соглашение — это необязательно.</p>';
+}
+window.revokeAgr = async id => {
+  if (!confirm("Отозвать согласие? Лейбл снимет треки этого артиста с V1X3N в разумный срок.")) return;
+  const { error } = await db.from("agreements").update({ status: "Отозван", revoked_at: new Date().toISOString() }).eq("id", id);
+  if (error) alert("Ошибка: " + error.message); loadAgr();
+};
+$("#agForm").onsubmit = async e => {
+  e.preventDefault(); const f = e.target, el = f.elements, m = $("#agMsg"), err = t => { m.className = "msg err"; m.textContent = t; };
+  if (!db) return err(NODB);
+  if (!el.artist.value) return err("Сначала создайте артиста.");
+  if (el.signer.value.trim().split(/\s+/).length < 2) return err("Укажите фамилию и имя полностью.");
+  if (!el.c1.checked || !el.c2.checked) return err("Отметьте оба пункта согласия.");
+  const { data: { user } } = await db.auth.getUser();
+  const r = await db.from("agreements").insert({ user_id: user.id, login: user.email, artist_name: el.artist.value, signer_name: el.signer.value.trim(), terms_version: "v1" });
+  if (r.error) return err(r.error.code === "23505" ? "Для этого артиста соглашение уже действует." : "Не удалось подписать: " + r.error.message);
+  f.reset(); m.className = "msg ok"; m.textContent = "Соглашение подписано. Спасибо! 💜"; loadAgr();
+};
+async function loadAgrAdmin() {
+  const { data, error } = await db.from("agreements").select("*").order("created_at", { ascending: false }); if (error) return;
+  $("#aglist").innerHTML = data.length ? data.map(a => `<div class="rl"><div style="flex:1"><b>${esc(a.artist_name)}</b><br><small style="color:var(--mut)">${esc(a.login)} · подписант: ${esc(a.signer_name)} · ${dt(a.created_at)}${a.revoked_at ? " · отозвано " + dt(a.revoked_at) : ""}</small></div><span class="bd s-${a.status === "Действует" ? "Готово" : "Закрыто"}">${esc(a.status)}</span></div>`).join("") : '<p class="emp">Соглашений пока нет.</p>';
 }
 </script>
 </body>
