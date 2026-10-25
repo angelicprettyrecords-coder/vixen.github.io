@@ -58,8 +58,8 @@ h2{font-size:clamp(28px,4.5vw,52px);letter-spacing:-.03em;line-height:1.1;margin
 footer{text-align:center;padding:40px;color:var(--mut);font-size:14px}
 .rv{opacity:0;transform:translateY(34px);transition:1s cubic-bezier(.2,.8,.2,1)}.rv.on{opacity:1;transform:none}
 /* modal */
-.ov{position:fixed;inset:0;z-index:50;background:#1b103388;backdrop-filter:blur(8px);display:none;place-items:center;padding:16px;overflow:auto}
-.ov.show{display:grid;animation:fi .3s}
+.ov,.ov2{position:fixed;inset:0;z-index:50;background:#1b103388;backdrop-filter:blur(8px);display:none;place-items:center;padding:16px;overflow:auto}
+.ov.show,.ov2.show{display:grid;animation:fi .3s}
 @keyframes fi{from{opacity:0}}
 .md{background:var(--card);border-radius:28px;padding:34px;width:100%;max-width:520px;position:relative;animation:up .45s cubic-bezier(.2,.8,.2,1);max-height:94vh;overflow:auto}
 @keyframes up{from{transform:translateY(40px) scale(.97);opacity:0}}
@@ -233,8 +233,9 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 <div class="adm" id="adm">
   <div class="ah"><span class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b> · Админ</span>
     <div style="display:flex;gap:8px"><button class="btn btn-o sm" id="aHome">На сайт</button><button class="btn btn-o sm" id="reload">Обновить</button><button class="btn btn-p sm" id="logout">Выйти</button></div></div>
-  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button><button data-t="Svc">Genius / BandLink <span id="scnt"></span></button><button data-t="Cat">Каталог</button></div>
+  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button><button data-t="Svc">Genius / BandLink <span id="scnt"></span></button><button data-t="Cat">Каталог</button><button data-t="Art">Артисты</button></div>
   <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div><div id="paneTix" hidden><div id="tlist"></div></div><div id="paneSvc" hidden><div id="slist"></div></div>
+  <div id="paneArt" hidden><div id="alist"></div></div>
   <div id="paneCat" hidden><form id="catForm"><h3 style="font-family:Unbounded;font-size:17px;margin-bottom:6px">Добавить релиз в каталог</h3><p class="hint">Каталог показывается на странице «О лейбле».</p>
     <label>Обложка *</label><input type="file" name="cover" accept="image/jpeg,image/png" required>
     <label>Название *</label><input name="title" required maxlength="150"><label>Артист *</label><input name="artist" required maxlength="100">
@@ -248,6 +249,7 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
   <aside><span class="brand"><i>VIXEN</i> MUSIC<b>.</b></span>
     <button class="sb a" data-v="Home">🏠 Начало</button>
     <button class="sb" data-v="New">⬆️ Отгрузить релиз</button>
+    <button class="sb" data-v="Art">🎤 Мои артисты</button>
     <button class="sb" data-v="Sup">💬 Поддержка</button>
     <button class="sb" id="cHome" style="margin-top:auto">🌐 На сайт</button>
     <button class="sb" id="cLogout">Выйти</button></aside>
@@ -261,6 +263,7 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
       <div class="pk" id="pk"><button id="pSingle">💿 Сингл<br><small style="font-weight:400;color:var(--mut)">Одна песня</small></button><button id="pAlbum">📀 Альбом<br><small style="font-weight:400;color:var(--mut)">Несколько треков</small></button></div>
       <form id="relForm" hidden></form>
       <form id="albForm" hidden></form></div>
+    <div id="vArt" hidden><div class="rowb"><h2>Мои артисты</h2><button class="btn btn-y sm" id="addArt">+ Создать артиста</button></div><p class="sub">Артисты, от имени которых вы выпускаете музыку. Первый артист — основной.</p><div id="artList"></div></div>
     <div id="vSup" hidden><h2>Поддержка</h2><p class="sub">Опишите вопрос — ответ появится здесь же. Каждому запросу присваивается номер.</p>
       <form id="tkForm"><label>Тема обращения *</label><select name="topic" required><option value="">Выберите тему…</option><option>Проблема с релизом</option><option>Вопрос по модерации</option><option>Выплаты и отчётность</option><option>Авторские права и роялти</option><option>Снятие релиза с площадок</option><option>Технический вопрос по сайту</option><option>Другое</option></select>
         <label>Заголовок *</label><input name="subject" required maxlength="120" placeholder="Коротко о сути">
@@ -333,7 +336,7 @@ async function enter(user) {
   const { data, error } = await db.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
   closeAll();
   if (error) { alert("Не удалось проверить права админа: " + error.message); return; }
-  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); }
+  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); loadArtistsAdmin(); }
   else openCab(user);
 }
 
@@ -386,7 +389,7 @@ $("#relForm").innerHTML = `
   <h4>1. О песне</h4>
   <label>Название песни *</label><input name="title" required maxlength="150">
   <label>Версия</label><span class="hint">Укажите, если у песни есть версия в скобках, например (Clean), (Speed Up), (Remix).</span><input name="version" maxlength="80">
-  <label>Псевдоним артиста *</label><input name="artist" required maxlength="100">
+  <label>Артист *</label><select class="artSel" name="artist" required></select><span class="hint">Нужен другой артист? Создайте его в разделе «Мои артисты».</span>
   <label>При участии исполнителя(ей)</label><span class="hint">Если в треке есть фит, укажите артистов через запятую. Например: Artist 1, Artist 2.</span><input name="feat" maxlength="200">
   <label>Жанр *</label><select name="genre" required>${opts(GENRES, "Выберите жанр…")}</select>
   ${yn("instrumental", "Эта песня инструментальна? (без слов)")}
@@ -451,7 +454,7 @@ $("#relForm").onsubmit = async e => {
 };
 
 function cabView(v) {
-  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup";
+  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup"; $("#vArt").hidden = v !== "Art";
   $$("[data-v]").forEach(b => b.classList.toggle("a", b.dataset.v === v));
   if (v === "New") { $("#relForm").hidden = true; $("#albForm").hidden = true; $("#pk").hidden = false; $("#relMsg").textContent = ""; }
   window.scrollTo(0, 0); $("#cab").scrollTo({ top: 0, behavior: "smooth" });
@@ -472,7 +475,7 @@ window.delRel = async id => {
 };
 function openCab(user) {
   $("#uName").textContent = (user.email || "").split("@")[0];
-  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine(); refreshTix(); loadSvc();
+  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine(); refreshTix(); loadSvc(); loadArtists();
   if (ch) db.removeChannel(ch);
   ch = db.channel("rel-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "releases", filter: "user_id=eq." + user.id }, loadMine).on("postgres_changes", { event: "*", schema: "public", table: "tickets" }, () => refreshTix()).on("postgres_changes", { event: "*", schema: "public", table: "ticket_messages" }, () => refreshTix()).on("postgres_changes", { event: "*", schema: "public", table: "services" }, () => loadSvc()).subscribe();
 }
@@ -488,7 +491,7 @@ async function loadMine() {
 }
 
 // ================= АДМИН: релизы и вкладки =================
-$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); ["Apps", "Rels", "Tix", "Svc", "Cat"].forEach(n => $("#pane" + n).hidden = b.dataset.t !== n); });
+$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); ["Apps", "Rels", "Tix", "Svc", "Cat", "Art"].forEach(n => $("#pane" + n).hidden = b.dataset.t !== n); });
 const YN = x => x ? "Да" : "Нет";
 async function loadRels() {
   const { data, error } = await db.from("releases").select("*").order("created_at", { ascending: false });
@@ -520,9 +523,9 @@ window.editReason = async id => {
 };
 
 // выход (и из админки, и из кабинета артиста)
-const doLogout = async () => { await db.auth.signOut(); if (ch) { db.removeChannel(ch); ch = null; } $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); document.body.style.overflow = ""; };
+const doLogout = async () => { await db.auth.signOut(); if (ch) { db.removeChannel(ch); ch = null; } $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); $("#arOv").classList.remove("show"); myArtists = []; document.body.style.overflow = ""; };
 $("#logout").onclick = doLogout; $("#cLogout").onclick = doLogout;
-$("#reload").onclick = () => { loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); };
+$("#reload").onclick = () => { loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); loadArtistsAdmin(); };
 
 // ================= ТЕМА =================
 const setTheme = t => { document.documentElement.dataset.theme = t; $("#themeBtn").textContent = t === "dark" ? "☀️" : "🌙"; try { localStorage.setItem("theme", t); } catch (e) {} };
@@ -586,7 +589,7 @@ $("#albForm").innerHTML = `
   <label>Название альбома *</label><input name="aTitle" required maxlength="150">
   <label>Загрузить обложку *</label><span class="hint">JPG или PNG, строго квадрат: от 1440×1440 до 3000×3000 px. Без логотипов и названий брендов, ссылок, QR-кодов и контактов; без непристойного, оскорбительного и насильственного контента; изображение должно быть чётким и принадлежать вам или быть использовано легально.</span><input type="file" name="coverFile" accept="image/jpeg,image/png" required>
   <h4>2. Информация об альбоме</h4>
-  <label>Псевдоним артиста *</label><input name="aArtist" required maxlength="100">
+  <label>Артист *</label><select class="artSel" name="aArtist" required></select><span class="hint">Нужен другой артист? Создайте его в разделе «Мои артисты».</span>
   <label>Жанр *</label><select name="aGenre" required>${opts(GENRES, "Выберите жанр…")}</select>
   <div class="ct"><div><label>Дата цифрового релиза *</label><input type="date" name="aDigital" required></div><div><label>Дата первоначального релиза *</label><input type="date" name="aOrig" required></div></div>
   <label>Страна записи *</label><select name="aCountry" required>${opts(COUNTRIES, "Выберите страну…")}</select>
@@ -747,7 +750,7 @@ $("#catForm").onsubmit = async e => {
 };
 
 // ================= ЗАПОМИНАНИЕ АККАУНТА =================
-const toSite = () => { $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); document.body.style.overflow = ""; window.scrollTo(0, 0); };
+const toSite = () => { $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); $("#arOv").classList.remove("show"); document.body.style.overflow = ""; window.scrollTo(0, 0); };
 $("#cHome").onclick = toSite; $("#aHome").onclick = toSite;
 if (db) {
   // сессия хранится в браузере; кнопка в шапке показывает, что вход выполнен
@@ -757,6 +760,70 @@ if (db) {
   });
   // автоматически открываем кабинет, если артист уже входил
   db.auth.getSession().then(({ data: { session } }) => { if (session && !location.hash) enter(session.user); });
+}
+
+// ================= АРТИСТЫ =================
+const LINKS = [["spotify","Spotify"],["apple","Apple Music"],["facebook","Facebook"],["twitter","Twitter"],["tiktok","TikTok"],["instagram","Instagram"],["snapchat","Snapchat"],["youtube","YouTube"],["soundcloud","SoundCloud"],["vevo","Vevo"],["website","Веб-сайт"],["audiomack","Audiomack"]];
+let myArtists = [], arForced = false;
+document.body.insertAdjacentHTML("beforeend", `
+<div class="ov2" id="arOv" style="z-index:75"><div class="md" style="max-width:640px"><button class="x" id="arX">×</button><h3 id="arH"></h3><p class="sub" id="arS"></p>
+  <form id="arForm"><label>Псевдоним артиста *</label><input name="name" required maxlength="100">
+    <label>Биография артиста <span style="font-weight:400;color:var(--mut)">(необязательно)</span></label><textarea name="bio" maxlength="2000"></textarea>
+    <label>Аватарка <span style="font-weight:400;color:var(--mut)">(необязательно)</span></label><span class="hint">JPG, PNG или WebP, до 5 МБ. Лучше квадратное фото.</span><input type="file" name="avatar" accept="image/jpeg,image/png,image/webp">
+    <label>Площадки и социальные сети *</label><span class="hint">Укажите ссылки минимум на <b>3</b> из списка. Остальные можно оставить пустыми.</span>
+    <div class="two">${LINKS.map(([k, l]) => `<div><small class="fl">${l}</small><input name="l_${k}" placeholder="https://…" maxlength="300"></div>`).join("")}</div>
+    <div class="hint" id="arCnt" style="margin-top:12px"></div>
+    <button class="btn btn-y full" type="submit">Создать артиста</button><div class="msg" id="arMsg"></div>
+    <button type="button" class="btn btn-o sm" id="arOut" style="margin-top:14px" hidden>Выйти из аккаунта</button></form></div></div>`);
+const arCount = () => LINKS.filter(([k]) => $("#arForm").elements["l_" + k].value.trim()).length;
+const arCnt = () => { const n = arCount(); $("#arCnt").innerHTML = `Заполнено: <b style="color:${n >= 3 ? "#16a34a" : "var(--mut)"}">${n}</b> из минимум 3`; };
+$("#arForm").addEventListener("input", arCnt);
+function openArtistForm() {
+  $("#arForm").reset(); $("#arMsg").textContent = ""; arCnt();
+  $("#arH").textContent = arForced ? "Создайте своего основного артиста" : "Создать нового артиста";
+  $("#arS").textContent = arForced ? "Чтобы пользоваться кабинетом, сначала создайте основного артиста: псевдоним и минимум 3 площадки или соцсети." : "Укажите псевдоним и минимум 3 площадки или соцсети.";
+  $("#arX").hidden = arForced; $("#arOut").hidden = !arForced; $("#arOv").classList.add("show");
+}
+$("#arX").onclick = () => $("#arOv").classList.remove("show");
+$("#arOut").onclick = () => doLogout();
+$("#addArt").onclick = () => { arForced = false; openArtistForm(); };
+const fillArt = () => $$(".artSel").forEach(sel => { const cur = sel.value; sel.innerHTML = myArtists.map((a, i) => `<option value="${esc(a.name)}">${esc(a.name)}${i === 0 ? " (основной)" : ""}</option>`).join(""); if (cur) sel.value = cur; });
+async function loadArtists() {
+  const { data, error } = await db.from("artists").select("*").order("created_at"); if (error) { console.error(error); return; }
+  myArtists = data; fillArt();
+  const S = db.storage.from("releases");
+  const urls = await Promise.all(data.map(async a => { if (!a.avatar_path) return null; const x = await S.createSignedUrl(a.avatar_path, 3600); return x.data && x.data.signedUrl; }));
+  $("#artList").innerHTML = data.map((a, i) => `<div class="rl">${urls[i] ? `<img src="${urls[i]}" alt="">` : `<div class="ph" style="display:grid;place-items:center;font-family:Unbounded;color:var(--p)">${esc(a.name.charAt(0).toUpperCase())}</div>`}<div style="flex:1"><b>${esc(a.name)}</b>${i === 0 ? ' <span class="bd s-Готово">основной</span>' : ""}<br><small style="color:var(--mut)">Площадок и соцсетей: ${Object.keys(a.links || {}).length}${a.bio ? " · " + esc(a.bio.slice(0, 90)) + (a.bio.length > 90 ? "…" : "") : ""}</small></div></div>`).join("");
+  if (!data.length && $("#cab").classList.contains("show")) { arForced = true; openArtistForm(); }
+}
+$("#arForm").onsubmit = async e => {
+  e.preventDefault(); const f = e.target, el = f.elements, m = $("#arMsg"), btn = f.querySelector("button[type=submit]"), err = t => { m.className = "msg err"; m.textContent = t; };
+  if (!db) return err(NODB);
+  const name = el.name.value.trim(), links = {};
+  if (myArtists.some(a => a.name.toLowerCase() === name.toLowerCase())) return err("Артист с таким псевдонимом у вас уже есть.");
+  for (const [k, l] of LINKS) {
+    let v = el["l_" + k].value.trim(); if (!v) continue;
+    if (!/^https?:\/\//i.test(v)) v = "https://" + v;
+    try { new URL(v); } catch (x) { return err("Проверьте ссылку: " + l); }
+    links[k] = v;
+  }
+  const n = Object.keys(links).length; if (n < 3) return err(`Укажите минимум 3 площадки или соцсети (сейчас: ${n}).`);
+  const file = el.avatar.files[0]; if (file && (!/^image\//.test(file.type) || file.size > 5 * 1024 * 1024)) return err("Аватарка: изображение до 5 МБ.");
+  btn.disabled = true; m.className = "msg"; m.textContent = "Создаём…";
+  try {
+    const { data: { user } } = await db.auth.getUser(); let ap = null;
+    if (file) { ap = user.id + "/avatar_" + crypto.randomUUID() + "." + file.name.split(".").pop().toLowerCase(); const u = await db.storage.from("releases").upload(ap, file); if (u.error) throw u.error; }
+    const r = await db.from("artists").insert({ user_id: user.id, login: user.email, name, bio: el.bio.value.trim() || null, avatar_path: ap, links }); if (r.error) throw r.error;
+    $("#arOv").classList.remove("show"); arForced = false; await loadArtists();
+  } catch (x) { console.error(x); err("Не удалось создать артиста: " + (x.message || x)); }
+  btn.disabled = false;
+};
+async function loadArtistsAdmin() {
+  const { data, error } = await db.from("artists").select("*").order("created_at", { ascending: false }); if (error) return;
+  const S = db.storage.from("releases"), nm = Object.fromEntries(LINKS);
+  const urls = await Promise.all(data.map(async a => { if (!a.avatar_path) return null; const x = await S.createSignedUrl(a.avatar_path, 3600); return x.data && x.data.signedUrl; }));
+  $("#alist").innerHTML = data.length ? data.map((a, i) => `<div class="ad">${urls[i] ? `<img src="${urls[i]}" alt="">` : ""}<div><h4 style="font-family:Unbounded">${esc(a.name)}</h4><small>${esc(a.login)} · ${new Date(a.created_at).toLocaleDateString("ru-RU")}</small>${a.bio ? `<p style="white-space:pre-wrap;margin:8px 0;color:var(--mut)">${esc(a.bio)}</p>` : ""}
+    <div class="lk">${Object.entries(a.links || {}).map(([k, v]) => /^https?:\/\//i.test(v) ? `<span><b>${esc(nm[k] || k)}:</b> <a href="${esc(v)}" target="_blank" rel="noopener" style="color:var(--p)">${esc(v)}</a></span>` : "").join("")}</div></div></div>`).join("") : "<p>Артистов пока нет.</p>";
 }
 </script>
 </body>
