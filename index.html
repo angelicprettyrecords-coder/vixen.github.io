@@ -87,6 +87,34 @@ textarea{min-height:100px;resize:vertical}
 @media(max-width:700px){.links a:not(.keep){display:none}.two{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 .brand{white-space:nowrap}@media(max-width:700px){.brand{font-size:13px}}
+
+.cl{display:grid;grid-template-columns:250px 1fr;min-height:100%}
+aside{background:#fff;border-right:1px solid #eee;padding:24px 16px;display:flex;flex-direction:column;gap:8px;position:sticky;top:0;height:100vh}
+aside .brand{margin-bottom:20px;font-size:15px}
+.sb{text-align:left;padding:13px 16px;border-radius:14px;background:none;font-weight:600;color:var(--mut);transition:.25s}.sb:hover{background:var(--pl);color:var(--p)}.sb.a{background:var(--p);color:#fff}
+.cm{padding:36px 5vw;max-width:980px}.cm[hidden],[hidden]{display:none!important}
+.st2{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:24px 0 36px}
+.sc{background:#fff;border-radius:20px;padding:22px;border:1px solid #eee4ff}.sc b{font-family:Unbounded;font-size:34px;color:var(--p);display:block}.sc span{color:var(--mut);font-size:14px}
+.sc.w{grid-column:1/-1;background:linear-gradient(135deg,var(--p),#4c1d95);color:#fff}.sc.w b{color:var(--y);font-size:20px}.sc.w span{color:#e6dcff}
+.rowb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.rl{display:flex;gap:16px;align-items:center;background:#fff;border-radius:18px;padding:14px;margin-bottom:12px;border:1px solid #eee4ff}
+.rl img,.ph{width:64px;height:64px;border-radius:12px;object-fit:cover;background:var(--pl);flex:none}
+.bd{display:inline-block;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:600;background:#fff4c2;color:#8a6a00}
+.bd.s-Отклонено{background:#fde2e2;color:#b42318}.bd.s-Принято{background:#dcf5e3;color:#15803d}.bd.s-Доставлено{background:var(--pl);color:var(--p)}
+.pk{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+.pk button{padding:28px;border-radius:22px;background:var(--pl);text-align:left;font-weight:600;font-size:18px;transition:.3s}.pk button:not(:disabled):hover{background:var(--y);transform:translateY(-4px)}.pk button:disabled{opacity:.5;cursor:not-allowed}
+.seg{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}.seg button{padding:12px 22px;border-radius:99px;background:#fff;border:2px solid #ece4fb;font-weight:600;color:var(--mut)}.seg .a{background:var(--p);color:#fff;border-color:var(--p)}
+#relForm{background:#fff;border-radius:24px;padding:28px;border:1px solid #eee4ff;margin-top:14px}
+#relForm h4{font-family:Unbounded;font-size:16px;margin:30px 0 4px;color:var(--p)}
+select{width:100%;padding:13px 16px;border-radius:14px;border:2px solid #ece4fb;font:inherit;background:#faf8ff;outline:0}select:focus{border-color:var(--p2)}
+.hint{display:block;font-size:12.5px;color:var(--mut);margin:-2px 0 8px;font-weight:400}
+.yn label{display:inline-flex;gap:6px;margin:0 18px 0 0;font-weight:500}.yn input{width:auto}
+.cr{display:grid;grid-template-columns:1.2fr 1fr auto;gap:8px;margin-bottom:8px}.rm{background:var(--pl);color:var(--p);border-radius:12px;padding:0 14px}
+.ct{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ad{background:#fff;border-radius:20px;padding:20px;margin-bottom:16px;border:1px solid #eee4ff;display:flex;gap:18px;flex-wrap:wrap}.ad img{width:140px;height:140px;border-radius:14px;object-fit:cover}.ad>div{flex:1;min-width:240px}
+.ad details{margin-top:10px;font-size:14px}.ad dt{font-weight:600;margin-top:6px}.ad dd{margin:0;color:var(--mut)}
+.ad select{width:auto;padding:8px 12px;margin-top:8px}
+@media(max-width:800px){.cl{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}.pk,.ct,.cr{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -182,8 +210,26 @@ textarea{min-height:100px;resize:vertical}
 <div class="adm" id="adm">
   <div class="ah"><span class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b> · Админ</span>
     <div style="display:flex;gap:8px"><button class="btn btn-o sm" id="reload">Обновить</button><button class="btn btn-p sm" id="logout">Выйти</button></div></div>
-  <div class="ab"><h2 style="font-size:28px">Заявки <span id="cnt" style="color:var(--p)"></span></h2><div id="list"></div></div>
+  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button></div>
+  <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div></div>
 </div>
+
+
+<!-- Кабинет артиста -->
+<div class="adm" id="cab"><div class="cl">
+  <aside><span class="brand"><i>VIXEN</i> MUSIC<b>.</b></span>
+    <button class="sb a" data-v="Home">🏠 Начало</button>
+    <button class="sb" data-v="New">⬆️ Отгрузить релиз</button>
+    <button class="sb" id="cLogout" style="margin-top:auto">Выйти</button></aside>
+  <main class="cm">
+    <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!</h2>
+      <div class="st2" id="st"></div>
+      <div class="rowb"><h3>Мои релизы</h3><button class="btn btn-y sm" id="addRel">+ Добавить релиз</button></div>
+      <div id="mine"></div></div>
+    <div id="vNew" hidden><h2>Отгрузить релиз</h2><p class="sub">Выберите, что отправить на модерацию.</p>
+      <div class="pk" id="pk"><button id="pSingle">💿 Сингл<br><small style="font-weight:400;color:var(--mut)">Одна песня</small></button><button disabled>📀 Альбом<br><small style="font-weight:400">Скоро</small></button></div>
+      <form id="relForm" hidden></form></div>
+  </main></div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -249,8 +295,8 @@ async function enter(user) {
   const { data, error } = await db.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
   closeAll();
   if (error) { alert("Не удалось проверить права админа: " + error.message); return; }
-  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); }
-  else alert("Вы вошли. Личный кабинет артиста скоро появится 💜");
+  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); }
+  else openCab(user);
 }
 
 // админка
@@ -276,6 +322,147 @@ window.setSt = async (id, status) => { await db.from("applications").update({ st
 window.delApp = async id => { if (confirm("Удалить заявку?")) { await db.from("applications").delete().eq("id", id); loadApps(); } };
 $("#reload").onclick = loadApps;
 $("#logout").onclick = async () => { await db.auth.signOut(); $("#adm").classList.remove("show"); document.body.style.overflow = ""; };
+
+// ================= КАБИНЕТ АРТИСТА =================
+const STATUSES = ["На модерации","Отклонено","Принято","Доставлено"];
+const GENRES = "African,Alternative,Arabic,Asian,Blues,Brazilian,Children Music,Christian & Gospel,Classical,Country,Dance,Easy Listening,Electronic,Folk,Hip Hop/Rap,Indian,Jazz,Latin,Metal,Pop,R&B/Soul,Reggae,Relaxation,Rock,Various,World Music/Regional Folklore".split(",");
+const LANGS = "Русский,English,Українська,Беларуская,Қазақша,Oʻzbekcha,Azərbaycanca,Հայերեն,ქართული,Türkçe,Español,Português,Français,Deutsch,Italiano,Polski,Nederlands,Svenska,Norsk,Dansk,Suomi,Čeština,Magyar,Română,Български,Српски,Ελληνικά,עברית,العربية,فارسی,हिन्दी,বাংলা,日本語,한국어,中文 (普通话),粵語,ไทย,Tiếng Việt,Bahasa Indonesia,Bahasa Melayu,Tagalog,Kiswahili,Без слов (инструментал)".split(",");
+const COUNTRIES = "Россия,Украина,Беларусь,Казахстан,Узбекистан,Азербайджан,Армения,Грузия,Молдова,Кыргызстан,Таджикистан,Латвия,Литва,Эстония,Польша,Германия,Франция,Великобритания,Италия,Испания,Португалия,Нидерланды,Бельгия,Швейцария,Австрия,Швеция,Норвегия,Дания,Финляндия,Чехия,Венгрия,Румыния,Болгария,Сербия,Греция,Турция,Израиль,ОАЭ,Саудовская Аравия,Египет,Марокко,Нигерия,ЮАР,США,Канада,Мексика,Бразилия,Аргентина,Чили,Колумбия,Индия,Китай,Япония,Южная Корея,Таиланд,Вьетнам,Индонезия,Австралия,Новая Зеландия,Другая".split(",");
+const ROLES = {
+  w: ["Composer (C)|Композитор (C)","Author (A)|Автор текста (A)","Arranger (AR)|Аранжировщик (AR)","Adapter (AD)|Адаптер (AD)","Translator (TR)|Переводчик (TR)"],
+  p: ["Publisher (PUB)|Издатель (PUB)","Sub-Publisher (SP)|Саб-издатель (SP)","Administrator (ADM)|Администратор (ADM)"],
+  pr: ["Producer|Продюсер"],
+  e1: ["Background Vocals|Бэк-вокал","Keyboards|Клавишные","Guitar|Гитара","Bass Guitar|Бас-гитара","Drums|Ударные","Accordion|Аккордеон","Acoustic Guitar|Акустическая гитара","Assistant Conductor|Помощник дирижёра","Bagpipes|Волынка","Piano|Фортепиано","Violin|Скрипка","Cello|Виолончель","Saxophone|Саксофон","Trumpet|Труба","Flute|Флейта","Synthesizer|Синтезатор","Percussion|Перкуссия"],
+  e2: ["Mixing Engineer|Звукорежиссёр сведения","Mastering Engineer|Мастеринг-инженер","Remix Engineer|Ремикс-инженер","Recording Engineer|Звукорежиссёр записи","Sound Designer|Саунд-дизайнер","Instrumentalist|Инструменталист","Background Vocalist / Choir|Бэк-вокалист / хор","Rights Holder|Правообладатель","Label|Лейбл"]
+};
+const opts = (a, ph) => (ph ? `<option value="">${ph}</option>` : "") + a.map(x => { const [v, l] = x.split("|"); return `<option value="${esc(v)}">${esc(l || v)}</option>`; }).join("");
+const yn = (n, q, v = "no") => `<label>${q}</label><div class="yn"><label><input type="radio" name="${n}" value="yes"${v == "yes" ? " checked" : ""}> Да</label><label><input type="radio" name="${n}" value="no"${v == "no" ? " checked" : ""}> Нет</label></div>`;
+const grp = (k, t, h) => `<div class="cg" data-k="${k}"><label>${t}</label>${h ? `<span class="hint">${h}</span>` : ""}<div class="crs"></div><button type="button" class="btn btn-o sm" data-add="${k}">+ Добавить</button></div>`;
+const addRow = k => {
+  const d = document.createElement("div"); d.className = "cr";
+  d.innerHTML = `<input placeholder="Фамилия Имя" maxlength="120"><select>${opts(ROLES[k], k === "pr" ? "" : "Выберите роль…")}</select><button type="button" class="rm">×</button>`;
+  d.querySelector(".rm").onclick = () => d.remove();
+  $(`.cg[data-k="${k}"] .crs`).append(d);
+};
+$("#relForm").innerHTML = `
+  <h4>1. О песне</h4>
+  <label>Название песни *</label><input name="title" required maxlength="150">
+  <label>Версия</label><span class="hint">Укажите, если у песни есть версия в скобках, например (Clean), (Speed Up), (Remix).</span><input name="version" maxlength="80">
+  <label>Псевдоним артиста *</label><input name="artist" required maxlength="100">
+  <label>При участии исполнителя(ей)</label><span class="hint">Если в треке есть фит, укажите артистов через запятую. Например: Artist 1, Artist 2.</span><input name="feat" maxlength="200">
+  <label>Жанр *</label><select name="genre" required>${opts(GENRES, "Выберите жанр…")}</select>
+  ${yn("instrumental", "Эта песня инструментальна? (без слов)")}
+  ${yn("cover", "Эта песня кавер?")}
+  <div id="coverBox" hidden><div class="ct"><div><label>Исполнитель оригинала</label><input name="coverArtist" maxlength="120"></div><div><label>Название оригинальной песни</label><input name="coverSong" maxlength="150"></div></div>${yn("coverPerm", "Получено ли разрешение правообладателя?")}</div>
+  <h4>2. Обложка</h4>
+  <label>Загрузить обложку *</label><span class="hint">JPG или PNG, строго квадрат: от 1440×1440 до 3000×3000 px. Без логотипов и названий брендов, ссылок, QR-кодов и контактов; без непристойного, оскорбительного и насильственного контента; изображение должно быть чётким и принадлежать вам или быть использовано легально.</span><input type="file" name="coverFile" accept="image/jpeg,image/png" required>
+  <h4>3. Аудиофайл</h4>
+  <label>Загрузить аудиофайл *</label><span class="hint">Формат WAV или FLAC без сжатия с потерями, не короче 60 секунд. Рекомендуем 16/24 бит, 44.1 кГц и выше, стерео. Без клиппинга, водяных знаков и тишины в начале и конце.</span><input type="file" name="audioFile" accept=".wav,.flac,audio/wav,audio/x-wav,audio/flac" required>
+  <h4>4. Информация о релизе</h4>
+  <label>Язык текста песни *</label><select name="lang" required>${opts(LANGS, "Выберите язык…")}</select>
+  <div class="ct"><div><label>Дата цифрового релиза *</label><input type="date" name="dDigital" required></div><div><label>Дата первоначального релиза *</label><input type="date" name="dOrig" required></div></div>
+  ${yn("explicit", "Содержит ли непристойный контент?")}
+  <label>Страна записи *</label><select name="country" required>${opts(COUNTRIES, "Выберите страну…")}</select>
+  ${yn("blockchain", "Блокчейн")}${yn("publishing", "Publishing")}
+  <h4>5. Авторы</h4>
+  ${grp("w", "Писатели", "Фамилия Имя и роль.")}${grp("p", "Издатели", "Фамилия Имя (или название) и роль.")}${grp("pr", "Продюсеры", "Фамилия Имя. Роль: Продюсер.")}
+  <h4>Дополнительные авторы</h4>
+  ${grp("e1", "Исполнители и музыканты")}${grp("e2", "Технические участники")}
+  <button class="btn btn-y full" type="submit" id="relBtn">Отправить на модерацию</button><div class="msg" id="relMsg"></div>`;
+["w","p","pr","e1","e2"].forEach(addRow);
+$("#relForm").addEventListener("click", e => { const k = e.target.dataset.add; if (k) addRow(k); });
+$("#relForm").addEventListener("change", e => { if (e.target.name === "cover") $("#coverBox").hidden = e.target.value !== "yes"; });
+$$("#relMsg").forEach(m => new MutationObserver(() => m.scrollIntoView({ block: "nearest", behavior: "smooth" })).observe(m, { childList: true }));
+
+const dim = f => new Promise(r => { const i = new Image(); i.onload = () => r([i.naturalWidth, i.naturalHeight]); i.onerror = () => r(null); i.src = URL.createObjectURL(f); });
+const dur = f => new Promise(r => { const a = new Audio(); a.preload = "metadata"; a.onloadedmetadata = () => r(a.duration); a.onerror = () => r(null); a.src = URL.createObjectURL(f); setTimeout(() => r(null), 5000); });
+
+$("#relForm").onsubmit = async e => {
+  e.preventDefault();
+  const f = e.target, m = $("#relMsg"), btn = $("#relBtn"), v = n => f.elements[n].value.trim(), y = n => f.elements[n].value === "yes";
+  const err = t => { m.className = "msg err"; m.textContent = t; };
+  if (!db) return err(NODB);
+  const cover = f.elements.coverFile.files[0], audio = f.elements.audioFile.files[0];
+  const d = await dim(cover);
+  if (!d || d[0] !== d[1] || d[0] < 1440 || d[0] > 3000) return err("Обложка должна быть квадратной: от 1440×1440 до 3000×3000 px" + (d ? ` (у вас ${d[0]}×${d[1]})` : "."));
+  if (!/\.(wav|flac)$/i.test(audio.name)) return err("Аудиофайл должен быть в формате WAV или FLAC.");
+  const t = await dur(audio);
+  if (t !== null && t < 60) return err("Аудио короче 60 секунд.");
+  if (y("cover") && (!v("coverArtist") || !v("coverSong"))) return err("Для кавера укажите исполнителя и название оригинала.");
+  const cred = {};
+  ["w","p","pr","e1","e2"].forEach(k => cred[k] = [...$$(`.cg[data-k="${k}"] .cr`)].map(r => ({ name: r.querySelector("input").value.trim(), role: r.querySelector("select").value })).filter(x => x.name));
+  for (const k of ["w","p","e1","e2"]) if (cred[k].some(x => !x.role)) return err("Укажите роль для каждого автора.");
+  btn.disabled = true; m.className = "msg"; m.textContent = "Загружаем файлы…";
+  try {
+    const { data: { user } } = await db.auth.getUser();
+    const dir = user.id + "/" + crypto.randomUUID(), ext = x => x.name.split(".").pop().toLowerCase();
+    const cp = dir + "/cover." + ext(cover), ap = dir + "/audio." + ext(audio);
+    let r = await db.storage.from("releases").upload(cp, cover); if (r.error) throw r.error;
+    r = await db.storage.from("releases").upload(ap, audio); if (r.error) throw r.error;
+    const data = { login: user.email, version: v("version"), artist: v("artist"), feat: v("feat"), genre: v("genre"), instrumental: y("instrumental"),
+      cover: y("cover"), coverInfo: y("cover") ? { artist: v("coverArtist"), song: v("coverSong"), permission: y("coverPerm") } : null,
+      language: v("lang"), digitalDate: v("dDigital"), originalDate: v("dOrig"), explicit: y("explicit"), country: v("country"),
+      blockchain: y("blockchain"), publishing: y("publishing"), credits: cred };
+    r = await db.from("releases").insert({ user_id: user.id, title: v("title"), data, cover_path: cp, audio_path: ap }); if (r.error) throw r.error;
+    f.reset(); $("#coverBox").hidden = true; $$(".crs").forEach(c => c.innerHTML = ""); ["w","p","pr","e1","e2"].forEach(addRow);
+    m.className = "msg ok"; m.textContent = "Релиз отправлен на модерацию! 💜";
+    loadMine(); setTimeout(() => cabView("Home"), 1400);
+  } catch (x) { console.error(x); err("Не удалось отправить: " + (x.message || x)); }
+  btn.disabled = false;
+};
+
+function cabView(v) {
+  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New";
+  $$("[data-v]").forEach(b => b.classList.toggle("a", b.dataset.v === v));
+  if (v === "New") { $("#relForm").hidden = true; $("#pk").hidden = false; $("#relMsg").textContent = ""; }
+  window.scrollTo(0, 0); $("#cab").scrollTo({ top: 0, behavior: "smooth" });
+}
+$$("[data-v]").forEach(b => b.onclick = () => { cabView(b.dataset.v); if (b.dataset.v === "Home") $("#st").scrollIntoView({ behavior: "smooth", block: "center" }); });
+$("#addRel").onclick = () => cabView("New");
+$("#pSingle").onclick = () => { $("#pk").hidden = true; $("#relForm").hidden = false; };
+
+let ch = null;
+function openCab(user) {
+  $("#uName").textContent = (user.email || "").split("@")[0];
+  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine();
+  if (ch) db.removeChannel(ch);
+  ch = db.channel("rel-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "releases", filter: "user_id=eq." + user.id }, loadMine).subscribe();
+}
+setInterval(() => $("#cab").classList.contains("show") && loadMine(), 30000);
+async function loadMine() {
+  const { data, error } = await db.from("releases").select("id,title,status,created_at,data").order("created_at", { ascending: false });
+  if (error) { console.error(error); return; }
+  const c = s => data.filter(r => r.status === s).length, l = data[0];
+  $("#st").innerHTML = [["Всего релизов", data.length], ["На модерации", c("На модерации")], ["Принято", c("Принято")], ["Доставлено", c("Доставлено")]].map(([n, v]) => `<div class="sc"><b>${v}</b><span>${n}</span></div>`).join("") +
+    `<div class="sc w"><span>Последний релиз</span><b>${l ? esc(l.title) + " · " + esc(l.status) : "Пока нет — отгрузите первый!"}</b></div>`;
+  $("#mine").innerHTML = data.length ? data.map(r => `<div class="rl"><div class="ph"></div><div style="flex:1"><b>${esc(r.title)}${r.data.version ? " " + esc(r.data.version) : ""}</b><br><small style="color:var(--mut)">${esc(r.data.artist)} · ${new Date(r.created_at).toLocaleDateString("ru-RU")}</small></div><span class="bd s-${esc(r.status)}">${esc(r.status)}</span></div>`).join("") : "<p style='color:var(--mut)'>Релизов пока нет.</p>";
+}
+
+// ================= АДМИН: релизы и вкладки =================
+$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); $("#paneApps").hidden = b.dataset.t !== "Apps"; $("#paneRels").hidden = b.dataset.t !== "Rels"; });
+const YN = x => x ? "Да" : "Нет";
+async function loadRels() {
+  const { data, error } = await db.from("releases").select("*").order("created_at", { ascending: false });
+  if (error) { $("#rlist").innerHTML = '<p class="err">Ошибка загрузки</p>'; return; }
+  $("#rcnt").textContent = "(" + data.length + ")";
+  const S = db.storage.from("releases");
+  const urls = await Promise.all(data.map(async r => { const [a, b] = await Promise.all([S.createSignedUrl(r.cover_path, 3600), S.createSignedUrl(r.audio_path, 3600)]); return [a.data && a.data.signedUrl, b.data && b.data.signedUrl]; }));
+  const cn = { w: "Писатели", p: "Издатели", pr: "Продюсеры", e1: "Исполнители и музыканты", e2: "Технические участники" };
+  $("#rlist").innerHTML = data.length ? data.map((r, i) => { const d = r.data;
+    const rows = [["Артист", d.artist], ["При участии", d.feat || "—"], ["Жанр", d.genre], ["Инструментал", YN(d.instrumental)], ["Кавер", d.cover ? `Да — ${esc(d.coverInfo.artist)} / ${esc(d.coverInfo.song)}, разрешение: ${YN(d.coverInfo.permission)}` : "Нет"], ["Язык", d.language], ["Цифровой релиз", d.digitalDate], ["Первоначальный релиз", d.originalDate], ["Непристойный контент", YN(d.explicit)], ["Страна записи", d.country], ["Блокчейн", YN(d.blockchain)], ["Publishing", YN(d.publishing)], ["Логин артиста", d.login]]
+      .map(([k, v]) => `<dt>${k}</dt><dd>${typeof v === "string" && v.includes("<") ? v : esc(v)}</dd>`).join("") +
+      Object.keys(cn).map(k => `<dt>${cn[k]}</dt><dd>${(d.credits[k] || []).map(x => esc(x.name) + " — " + esc(x.role)).join("<br>") || "—"}</dd>`).join("");
+    return `<div class="ad"><img src="${urls[i][0] || ""}" alt=""><div><h4 style="font-family:Unbounded">${esc(r.title)} ${esc(d.version || "")}</h4><small>${esc(d.artist)} · ${new Date(r.created_at).toLocaleString("ru-RU")}</small>
+      <br>${urls[i][1] ? `<audio controls preload="none" src="${urls[i][1]}" style="margin-top:10px;width:100%"></audio><a href="${urls[i][1]}" download style="color:var(--p);font-size:14px">Скачать аудио</a> · <a href="${urls[i][0]}" target="_blank" style="color:var(--p);font-size:14px">Обложка</a>` : ""}
+      <br><select onchange="setRel('${r.id}',this.value)">${STATUSES.map(s => `<option${s === r.status ? " selected" : ""}>${s}</option>`).join("")}</select>
+      <details><summary>Все данные релиза</summary><dl>${rows}</dl></details></div></div>`; }).join("") : "<p>Релизов пока нет.</p>";
+}
+window.setRel = async (id, status) => { const { error } = await db.from("releases").update({ status }).eq("id", id); if (error) alert("Ошибка: " + error.message); loadRels(); };
+
+// выход (и из админки, и из кабинета артиста)
+const doLogout = async () => { await db.auth.signOut(); if (ch) { db.removeChannel(ch); ch = null; } $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); document.body.style.overflow = ""; };
+$("#logout").onclick = doLogout; $("#cLogout").onclick = doLogout;
+$("#reload").onclick = () => { loadApps(); loadRels(); };
 </script>
 </body>
 </html>
