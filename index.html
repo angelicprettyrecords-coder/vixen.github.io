@@ -187,7 +187,9 @@ const SUPABASE_URL = "https://eoxtvbnbdxukrgmgembx.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_FYrTrkHQ76ITOKJCQnDepw_u95N7BTT";
 const LOGIN_DOMAIN = "label.local"; // логин admadmadmadm4 → admadmadmadm4@label.local
 // ==============================================================================
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let db = null;
+try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch (err) { console.error("Supabase не загрузился:", err); }
+const NODB = "Не удалось подключиться к Supabase. Обновите страницу (Ctrl+F5) и проверьте ключи.";
 const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 $("#yr").textContent = new Date().getFullYear();
@@ -197,23 +199,26 @@ $("#mq").innerHTML = ("НОВАЯ МУЗЫКА<span>✦</span>РЕЛИЗЫ<span>
 const io = new IntersectionObserver(e => e.forEach(x => x.isIntersecting && x.target.classList.add("on")), {threshold:.15});
 $$(".rv").forEach(el => io.observe(el));
 
-const open = id => { $(id).classList.add("show"); document.body.style.overflow = "hidden"; };
+const openM = id => { $(id).classList.add("show"); document.body.style.overflow = "hidden"; };
 const closeAll = () => { $$(".ov").forEach(o => o.classList.remove("show")); if(!$("#adm").classList.contains("show")) document.body.style.overflow = ""; };
-$$("[data-apply]").forEach(b => b.onclick = () => open("#applyOv"));
+$$("[data-apply]").forEach(b => b.onclick = () => openM("#applyOv"));
 $$("[data-close]").forEach(b => b.onclick = closeAll);
-$$(".ov").forEach(o => o.onclick = e => e.target === o && closeAll());
+$$(".ov").forEach(o => o.addEventListener("click", e => { if (e.target === o) closeAll(); }));
+// сообщения под формами всегда прокручиваются в видимую область
+$$(".msg").forEach(m => new MutationObserver(() => m.scrollIntoView({ block: "nearest", behavior: "smooth" })).observe(m, { childList: true, characterData: true, subtree: true }));
 addEventListener("keydown", e => e.key === "Escape" && closeAll());
 
 // заявка
 $("#applyForm").onsubmit = async e => {
   e.preventDefault();
   const f = new FormData(e.target), m = $("#applyMsg");
+  if (!db) { m.className = "msg err"; m.textContent = NODB; return; }
   m.className = "msg"; m.textContent = "Отправляем…";
   const { error } = await db.from("applications").insert({
     artist_name: f.get("artist").trim(), about: f.get("about").trim(), email: f.get("email").trim(),
     links: { spotify: f.get("spotify"), yandex: f.get("yandex"), vk: f.get("vk"), other: f.get("other") }
   });
-  if (error) { m.className = "msg err"; m.textContent = "Не удалось отправить. Попробуйте позже."; console.error(error); return; }
+  if (error) { m.className = "msg err"; m.textContent = "Не удалось отправить: " + error.message; console.error(error); return; }
   m.className = "msg ok"; m.textContent = "Заявка отправлена! Мы скоро свяжемся с вами 💜";
   e.target.reset(); ["spotify","yandex","vk","other"].forEach(n => e.target[n].value = "—");
 };
@@ -225,13 +230,15 @@ $$("[data-tab]").forEach(b => b.onclick = () => {
   $("#authSubmit").textContent = mode === "in" ? "Войти" : "Зарегистрироваться"; $("#authMsg").textContent = "";
 });
 $("#loginBtn").onclick = async () => {
-  const { data:{ session } } = await db.auth.getSession();
-  session ? enter(session.user) : open("#authOv");
+  let session = null;
+  try { session = (await db.auth.getSession()).data.session; } catch (err) { console.error(err); }
+  session ? enter(session.user) : openM("#authOv");
 };
 $("#authForm").onsubmit = async e => {
   e.preventDefault();
   const f = new FormData(e.target), m = $("#authMsg");
   let login = f.get("login").trim(); if (!login.includes("@")) login += "@" + LOGIN_DOMAIN;
+  if (!db) { m.className = "msg err"; m.textContent = NODB; return; }
   m.className = "msg"; m.textContent = "Подождите…";
   if (mode === "up") {
     const { error } = await db.auth.signUp({ email: login, password: f.get("pass") });
@@ -240,15 +247,16 @@ $("#authForm").onsubmit = async e => {
     return;
   }
   const { data, error } = await db.auth.signInWithPassword({ email: login, password: f.get("pass") });
-  if (error) { m.className = "msg err"; m.textContent = "Неверный логин или пароль"; return; }
+  if (error) { m.className = "msg err"; m.textContent = "Ошибка входа: " + error.message; console.error(error); return; }
   e.target.reset(); m.textContent = ""; enter(data.user);
 };
 
 async function enter(user) {
-  const { data } = await db.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
+  const { data, error } = await db.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
   closeAll();
+  if (error) { alert("Не удалось проверить права админа: " + error.message); return; }
   if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); }
-  else alert("Вы вошли. Личный кабинет артиста скоро появится 💜");
+  else alert("Вы вошли, но этого пользователя нет в таблице admins. Личный кабинет артиста скоро появится 💜");
 }
 
 // админка
