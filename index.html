@@ -232,7 +232,7 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 <!-- Кабинет админа -->
 <div class="adm" id="adm">
   <div class="ah"><span class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b> · Админ</span>
-    <div style="display:flex;gap:8px"><button class="btn btn-o sm" id="reload">Обновить</button><button class="btn btn-p sm" id="logout">Выйти</button></div></div>
+    <div style="display:flex;gap:8px"><button class="btn btn-o sm" id="aHome">На сайт</button><button class="btn btn-o sm" id="reload">Обновить</button><button class="btn btn-p sm" id="logout">Выйти</button></div></div>
   <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button><button data-t="Svc">Genius / BandLink <span id="scnt"></span></button><button data-t="Cat">Каталог</button></div>
   <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div><div id="paneTix" hidden><div id="tlist"></div></div><div id="paneSvc" hidden><div id="slist"></div></div>
   <div id="paneCat" hidden><form id="catForm"><h3 style="font-family:Unbounded;font-size:17px;margin-bottom:6px">Добавить релиз в каталог</h3><p class="hint">Каталог показывается на странице «О лейбле».</p>
@@ -249,7 +249,8 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
     <button class="sb a" data-v="Home">🏠 Начало</button>
     <button class="sb" data-v="New">⬆️ Отгрузить релиз</button>
     <button class="sb" data-v="Sup">💬 Поддержка</button>
-    <button class="sb" id="cLogout" style="margin-top:auto">Выйти</button></aside>
+    <button class="sb" id="cHome" style="margin-top:auto">🌐 На сайт</button>
+    <button class="sb" id="cLogout">Выйти</button></aside>
   <main class="cm">
     <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!</h2>
       <div class="st2" id="st"></div>
@@ -276,7 +277,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_FYrTrkHQ76ITOKJCQnDepw_u95N7BTT";
 const LOGIN_DOMAIN = "label.local"; // логин admadmadmadm4 → admadmadmadm4@label.local
 // ==============================================================================
 let db = null;
-try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch (err) { console.error("Supabase не загрузился:", err); }
+try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false } }); } catch (err) { console.error("Supabase не загрузился:", err); }
 const NODB = "Не удалось подключиться к Supabase. Обновите страницу (Ctrl+F5) и проверьте ключи.";
 const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -744,6 +745,19 @@ $("#catForm").onsubmit = async e => {
   if (r.error) return err("Не удалось добавить: " + r.error.message);
   f.reset(); m.className = "msg ok"; m.textContent = "Релиз добавлен в каталог ✓"; loadCat();
 };
+
+// ================= ЗАПОМИНАНИЕ АККАУНТА =================
+const toSite = () => { $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); document.body.style.overflow = ""; window.scrollTo(0, 0); };
+$("#cHome").onclick = toSite; $("#aHome").onclick = toSite;
+if (db) {
+  // сессия хранится в браузере; кнопка в шапке показывает, что вход выполнен
+  db.auth.onAuthStateChange((ev, session) => {
+    $("#loginBtn").textContent = session ? "Кабинет" : "Войти";
+    if (!session && ev === "SIGNED_OUT") toSite();   // вышли в другой вкладке
+  });
+  // автоматически открываем кабинет, если артист уже входил
+  db.auth.getSession().then(({ data: { session } }) => { if (session && !location.hash) enter(session.user); });
+}
 </script>
 </body>
 </html>
