@@ -3,34 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <title>VIXEN MUSIC GROUP — музыкальный лейбл</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Inter:wght@400;500;600&display=swap">
 <style>
-:root{--p:#6d28d9;--p2:#8b5cf6;--pl:#f3edff;--y:#facc15;--ink:#1b1033;--mut:#6b6485;--r:22px}
+:root{--bg:#fff;--card:#fff;--in:#faf8ff;--bd:#ece4fb;--nav:rgba(255,255,255,.75);--p:#6d28d9;--p2:#8b5cf6;--pl:#f3edff;--y:#facc15;--ink:#1b1033;--mut:#6b6485;--r:22px}
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
-body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:#fff;overflow-x:hidden;line-height:1.6}
+body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;line-height:1.6}
 h1,h2,h3,.brand{font-family:Unbounded,Inter,sans-serif}
 a{color:inherit;text-decoration:none}
 button{font:inherit;cursor:pointer;border:0}
-nav{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 5vw;background:rgba(255,255,255,.75);backdrop-filter:blur(14px);border-bottom:1px solid #0000000d}
+nav{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 5vw;background:var(--nav);backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
 .brand{font-weight:900;font-size:20px;letter-spacing:-.02em}.brand i{font-style:normal;color:var(--p)}.brand b{color:var(--y);text-shadow:0 0 0 #000}
 .links{display:flex;gap:28px;align-items:center;font-weight:500;font-size:15px}
 .links a:hover{color:var(--p)}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:99px;font-weight:600;transition:.3s cubic-bezier(.2,.8,.2,1)}
-.btn-y{background:var(--y);color:var(--ink);box-shadow:0 10px 30px -8px #facc15aa}
+.btn-y{background:var(--y);color:#1b1033;box-shadow:0 10px 30px -8px #facc15aa}
 .btn-y:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 16px 36px -8px #facc15}
 .btn-p{background:var(--p);color:#fff}.btn-p:hover{background:#5b21b6;transform:translateY(-2px)}
-.btn-o{background:#fff;color:var(--p);border:2px solid var(--p2)}.btn-o:hover{background:var(--pl)}
+.btn-o{background:var(--card);color:var(--p);border:2px solid var(--p2)}.btn-o:hover{background:var(--pl)}
 .sm{padding:10px 20px;font-size:14px}
-.hero{min-height:100vh;display:grid;place-items:center;text-align:center;padding:120px 6vw 80px;position:relative;overflow:hidden;background:radial-gradient(1200px 600px at 50% -10%,var(--pl),#fff 70%)}
+.hero{min-height:100vh;display:grid;place-items:center;text-align:center;padding:120px 6vw 80px;position:relative;overflow:hidden;background:radial-gradient(1200px 600px at 50% -10%,var(--pl),var(--bg) 70%)}
 .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:fl 14s ease-in-out infinite}
 .b1{width:420px;height:420px;background:var(--p2);left:-120px;top:10%}
 .b2{width:340px;height:340px;background:var(--y);right:-80px;bottom:5%;animation-delay:-6s}
 @keyframes fl{50%{transform:translate(40px,-50px) scale(1.12)}}
-.hero>div{position:relative;max-width:900px}
-.tag{display:inline-block;padding:7px 16px;border-radius:99px;background:#fff;border:1px solid #e4d9fb;font-size:13px;font-weight:600;color:var(--p);margin-bottom:26px}
+.hero>div:not(.blob){position:relative;max-width:900px}
+.tag{display:inline-block;padding:7px 16px;border-radius:99px;background:var(--card);border:1px solid var(--bd);font-size:13px;font-weight:600;color:var(--p);margin-bottom:26px}
 h1{font-size:clamp(38px,7.5vw,92px);line-height:1.02;font-weight:900;letter-spacing:-.04em}
 h1 em{font-style:normal;background:linear-gradient(120deg,var(--p),var(--p2));-webkit-background-clip:text;background-clip:text;color:transparent}
 h1 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--y) 62% 92%,transparent 92%)}
@@ -60,25 +61,25 @@ footer{text-align:center;padding:40px;color:var(--mut);font-size:14px}
 .ov{position:fixed;inset:0;z-index:50;background:#1b103388;backdrop-filter:blur(8px);display:none;place-items:center;padding:16px;overflow:auto}
 .ov.show{display:grid;animation:fi .3s}
 @keyframes fi{from{opacity:0}}
-.md{background:#fff;border-radius:28px;padding:34px;width:100%;max-width:520px;position:relative;animation:up .45s cubic-bezier(.2,.8,.2,1);max-height:94vh;overflow:auto}
+.md{background:var(--card);border-radius:28px;padding:34px;width:100%;max-width:520px;position:relative;animation:up .45s cubic-bezier(.2,.8,.2,1);max-height:94vh;overflow:auto}
 @keyframes up{from{transform:translateY(40px) scale(.97);opacity:0}}
 .x{position:absolute;right:16px;top:16px;width:38px;height:38px;border-radius:50%;background:var(--pl);color:var(--p);font-size:20px}
 .md h3{font-size:24px;margin-bottom:6px}.md .sub{margin-bottom:20px;font-size:14px}
 label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
-input,textarea{width:100%;padding:13px 16px;border-radius:14px;border:2px solid #ece4fb;font:inherit;background:#faf8ff;transition:.2s;outline:0}
-input:focus,textarea:focus{border-color:var(--p2);background:#fff;box-shadow:0 0 0 4px #8b5cf622}
+input,textarea{width:100%;padding:13px 16px;border-radius:14px;border:2px solid var(--bd);font:inherit;background:var(--in);transition:.2s;outline:0}
+input:focus,textarea:focus{border-color:var(--p2);background:var(--card);box-shadow:0 0 0 4px #8b5cf622}
 textarea{min-height:100px;resize:vertical}
 .fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:5px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .msg{margin-top:14px;font-size:14px;font-weight:500;min-height:20px}.err{color:#c0262d}.ok{color:#15803d}
 .full{width:100%;justify-content:center;margin-top:20px}
 .tabs{display:flex;gap:6px;background:var(--pl);padding:5px;border-radius:99px;margin-bottom:18px}
-.tabs button{flex:1;padding:10px;border-radius:99px;background:none;font-weight:600;color:var(--mut)}.tabs .a{background:#fff;color:var(--p);box-shadow:0 2px 8px #0001}
+.tabs button{flex:1;padding:10px;border-radius:99px;background:none;font-weight:600;color:var(--mut)}.tabs .a{background:var(--card);color:var(--p);box-shadow:0 2px 8px #0001}
 /* admin */
-.adm{position:fixed;inset:0;z-index:60;background:#faf8ff;overflow:auto;display:none}.adm.show{display:block}
-.ah{display:flex;justify-content:space-between;align-items:center;padding:18px 5vw;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0}
+.adm{position:fixed;inset:0;z-index:60;background:var(--in);overflow:auto;display:none}.adm.show{display:block}
+.ah{display:flex;justify-content:space-between;align-items:center;padding:18px 5vw;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0}
 .ab{padding:30px 5vw}
-.ap{background:#fff;border-radius:20px;padding:24px;margin-bottom:16px;border:1px solid #eee4ff;border-left:6px solid var(--y)}
+.ap{background:var(--card);border-radius:20px;padding:24px;margin-bottom:16px;border:1px solid var(--bd);border-left:6px solid var(--y)}
 .ap.st-approved{border-left-color:#16a34a}.ap.st-rejected{border-left-color:#dc2626;opacity:.7}
 .ap h4{font-family:Unbounded;font-size:18px}.ap small{color:var(--mut)}
 .ap p{margin:10px 0;white-space:pre-wrap}.lk{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
@@ -89,36 +90,49 @@ textarea{min-height:100px;resize:vertical}
 .brand{white-space:nowrap}@media(max-width:700px){.brand{font-size:13px}}
 
 .cl{display:grid;grid-template-columns:250px 1fr;min-height:100%}
-aside{background:#fff;border-right:1px solid #eee;padding:24px 16px;display:flex;flex-direction:column;gap:8px;position:sticky;top:0;height:100vh}
+aside{background:var(--card);border-right:1px solid var(--bd);padding:24px 16px;display:flex;flex-direction:column;gap:8px;position:sticky;top:0;height:100vh}
 aside .brand{margin-bottom:20px;font-size:15px}
 .sb{text-align:left;padding:13px 16px;border-radius:14px;background:none;font-weight:600;color:var(--mut);transition:.25s}.sb:hover{background:var(--pl);color:var(--p)}.sb.a{background:var(--p);color:#fff}
 .cm{padding:36px 5vw;max-width:980px}.cm[hidden],[hidden]{display:none!important}
 .st2{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:24px 0 36px}
-.sc{background:#fff;border-radius:20px;padding:22px;border:1px solid #eee4ff}.sc b{font-family:Unbounded;font-size:34px;color:var(--p);display:block}.sc span{color:var(--mut);font-size:14px}
+.sc{background:var(--card);border-radius:20px;padding:22px;border:1px solid var(--bd)}.sc b{font-family:Unbounded;font-size:34px;color:var(--p);display:block}.sc span{color:var(--mut);font-size:14px}
 .sc.w{grid-column:1/-1;background:linear-gradient(135deg,var(--p),#4c1d95);color:#fff}.sc.w b{color:var(--y);font-size:20px}.sc.w span{color:#e6dcff}
 .rowb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
-.rl{display:flex;gap:16px;align-items:center;background:#fff;border-radius:18px;padding:14px;margin-bottom:12px;border:1px solid #eee4ff}
+.rl{display:flex;gap:16px;align-items:center;background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;border:1px solid var(--bd)}
 .rl img,.ph{width:64px;height:64px;border-radius:12px;object-fit:cover;background:var(--pl);flex:none}
-.bd{display:inline-block;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:600;background:#fff4c2;color:#8a6a00}
+.bd{display:inline-block;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:600;background:var(--card)4c2;color:#8a6a00}
 .bd.s-Отклонено{background:#fde2e2;color:#b42318}.bd.s-Принято{background:#dcf5e3;color:#15803d}.bd.s-Доставлено{background:var(--pl);color:var(--p)}
 .pk{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
 .pk button{padding:28px;border-radius:22px;background:var(--pl);text-align:left;font-weight:600;font-size:18px;transition:.3s}.pk button:not(:disabled):hover{background:var(--y);transform:translateY(-4px)}.pk button:disabled{opacity:.5;cursor:not-allowed}
-.seg{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}.seg button{padding:12px 22px;border-radius:99px;background:#fff;border:2px solid #ece4fb;font-weight:600;color:var(--mut)}.seg .a{background:var(--p);color:#fff;border-color:var(--p)}
-#relForm{background:#fff;border-radius:24px;padding:28px;border:1px solid #eee4ff;margin-top:14px}
+.seg{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}.seg button{padding:12px 22px;border-radius:99px;background:var(--card);border:2px solid var(--bd);font-weight:600;color:var(--mut)}.seg .a{background:var(--p);color:#fff;border-color:var(--p)}
+#relForm{background:var(--card);border-radius:24px;padding:28px;border:1px solid var(--bd);margin-top:14px}
 #relForm h4{font-family:Unbounded;font-size:16px;margin:30px 0 4px;color:var(--p)}
-select{width:100%;padding:13px 16px;border-radius:14px;border:2px solid #ece4fb;font:inherit;background:#faf8ff;outline:0}select:focus{border-color:var(--p2)}
+select{width:100%;padding:13px 16px;border-radius:14px;border:2px solid var(--bd);font:inherit;background:var(--in);outline:0}select:focus{border-color:var(--p2)}
 .hint{display:block;font-size:12.5px;color:var(--mut);margin:-2px 0 8px;font-weight:400}
 .yn label{display:inline-flex;gap:6px;margin:0 18px 0 0;font-weight:500}.yn input{width:auto}
 .cr{display:grid;grid-template-columns:1.2fr 1fr auto;gap:8px;margin-bottom:8px}.rm{background:var(--pl);color:var(--p);border-radius:12px;padding:0 14px}
 .ct{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ad{background:#fff;border-radius:20px;padding:20px;margin-bottom:16px;border:1px solid #eee4ff;display:flex;gap:18px;flex-wrap:wrap}.ad img{width:140px;height:140px;border-radius:14px;object-fit:cover}.ad>div{flex:1;min-width:240px}
+.ad{background:var(--card);border-radius:20px;padding:20px;margin-bottom:16px;border:1px solid var(--bd);display:flex;gap:18px;flex-wrap:wrap}.ad img{width:140px;height:140px;border-radius:14px;object-fit:cover}.ad>div{flex:1;min-width:240px}
 .ad details{margin-top:10px;font-size:14px}.ad dt{font-weight:600;margin-top:6px}.ad dd{margin:0;color:var(--mut)}
 .ad select{width:auto;padding:8px 12px;margin-top:8px}
 @media(max-width:800px){.cl{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}.pk,.ct,.cr{grid-template-columns:1fr}}
 .tb{margin-bottom:28px}.tb h4{font-family:Unbounded;font-size:16px;margin-bottom:12px}.tb h4 span{color:var(--p);margin-left:6px}
-.emp{color:var(--mut);font-size:14px;background:#fff;border:1px dashed #e4d9fb;border-radius:14px;padding:14px}
+.emp{color:var(--mut);font-size:14px;background:var(--card);border:1px dashed var(--bd);border-radius:14px;padding:14px}
 .rj{margin-top:6px;font-size:13.5px;color:#b42318;background:#fde2e2;border-radius:10px;padding:8px 12px}
 .rl .btn{flex:none}
+
+:root[data-theme=dark]{color-scheme:dark;--bg:#09060f;--card:#14101e;--in:#100c19;--bd:#2b2142;--nav:rgba(9,6,15,.78);--p:#8b5cf6;--p2:#a78bfa;--pl:#1c1530;--ink:#f4efff;--mut:#a99fc4}
+input,textarea,select{color:var(--ink)}select option{background:var(--card);color:var(--ink)}::placeholder{color:var(--mut)}
+.pk button:not(:disabled):hover{color:#1b1033}
+[data-theme=dark] .blob{opacity:.28}[data-theme=dark] .band{background:linear-gradient(135deg,#4c1d95,#1a0b3d)}
+[data-theme=dark] .bd{background:#3a3000;color:#ffd84d}[data-theme=dark] .bd.s-Отклонено,[data-theme=dark] .rj{background:#3a1216;color:#ff9a9a}
+[data-theme=dark] .bd.s-Принято{background:#0f2e1a;color:#6ee79a}[data-theme=dark] .bd.s-Доставлено{background:#2a1d4d;color:#c4b5fd}
+[data-theme=dark] .ok{color:#4ade80}[data-theme=dark] .err{color:#ff8a8a}
+.bd.s-Закрыто{background:#e5e7eb;color:#4b5563}[data-theme=dark] .bd.s-Закрыто{background:#2a2433;color:#a99fc4}
+#themeBtn{padding:8px 13px}
+#tkForm{background:var(--card);border-radius:24px;padding:28px;border:1px solid var(--bd)}
+.tk{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px 18px;margin-bottom:12px}.tk summary{cursor:pointer;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.th{margin:14px 0}.mg{background:var(--pl);border-radius:14px;padding:10px 14px;margin-bottom:8px;max-width:88%}.mg.ad2{background:var(--p);color:#fff;margin-left:auto}.mg.ad2 small{color:#e6dcff}.mg p{white-space:pre-wrap;margin:4px 0 0}.tk textarea{margin:8px 0}
 </style>
 </head>
 <body>
@@ -127,6 +141,7 @@ select{width:100%;padding:13px 16px;border-radius:14px;border:2px solid #ece4fb;
   <a href="#top" class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b></a>
   <div class="links">
     <a href="#about">О лейбле</a><a href="#why">Преимущества</a>
+    <button class="btn btn-o sm" id="themeBtn" aria-label="Сменить тему">☀️</button>
     <button class="btn btn-o sm" id="loginBtn">Войти</button>
     <button class="btn btn-y sm" data-apply>Подать заявку</button>
   </div>
@@ -214,8 +229,8 @@ select{width:100%;padding:13px 16px;border-radius:14px;border:2px solid #ece4fb;
 <div class="adm" id="adm">
   <div class="ah"><span class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b> · Админ</span>
     <div style="display:flex;gap:8px"><button class="btn btn-o sm" id="reload">Обновить</button><button class="btn btn-p sm" id="logout">Выйти</button></div></div>
-  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button></div>
-  <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div></div>
+  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button></div>
+  <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div><div id="paneTix" hidden><div id="tlist"></div></div></div>
 </div>
 
 
@@ -224,6 +239,7 @@ select{width:100%;padding:13px 16px;border-radius:14px;border:2px solid #ece4fb;
   <aside><span class="brand"><i>VIXEN</i> MUSIC<b>.</b></span>
     <button class="sb a" data-v="Home">🏠 Начало</button>
     <button class="sb" data-v="New">⬆️ Отгрузить релиз</button>
+    <button class="sb" data-v="Sup">💬 Поддержка</button>
     <button class="sb" id="cLogout" style="margin-top:auto">Выйти</button></aside>
   <main class="cm">
     <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!</h2>
@@ -233,6 +249,12 @@ select{width:100%;padding:13px 16px;border-radius:14px;border:2px solid #ece4fb;
     <div id="vNew" hidden><h2>Отгрузить релиз</h2><p class="sub">Выберите, что отправить на модерацию.</p>
       <div class="pk" id="pk"><button id="pSingle">💿 Сингл<br><small style="font-weight:400;color:var(--mut)">Одна песня</small></button><button disabled>📀 Альбом<br><small style="font-weight:400">Скоро</small></button></div>
       <form id="relForm" hidden></form></div>
+    <div id="vSup" hidden><h2>Поддержка</h2><p class="sub">Опишите вопрос — ответ появится здесь же. Каждому запросу присваивается номер.</p>
+      <form id="tkForm"><label>Тема обращения *</label><select name="topic" required><option value="">Выберите тему…</option><option>Проблема с релизом</option><option>Вопрос по модерации</option><option>Выплаты и отчётность</option><option>Авторские права и роялти</option><option>Снятие релиза с площадок</option><option>Технический вопрос по сайту</option><option>Другое</option></select>
+        <label>Заголовок *</label><input name="subject" required maxlength="120" placeholder="Коротко о сути">
+        <label>Сообщение *</label><textarea name="text" required maxlength="3000" placeholder="Опишите проблему или вопрос подробно. Если вопрос про релиз — укажите его название."></textarea>
+        <button class="btn btn-y full" type="submit">Отправить запрос</button><div class="msg" id="tkMsg"></div></form>
+      <h3 style="margin:32px 0 14px">Мои запросы</h3><div id="tix"></div></div>
   </main></div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -299,7 +321,7 @@ async function enter(user) {
   const { data, error } = await db.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
   closeAll();
   if (error) { alert("Не удалось проверить права админа: " + error.message); return; }
-  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); }
+  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); loadTix($("#tlist"), true); }
   else openCab(user);
 }
 
@@ -416,7 +438,7 @@ $("#relForm").onsubmit = async e => {
 };
 
 function cabView(v) {
-  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New";
+  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup";
   $$("[data-v]").forEach(b => b.classList.toggle("a", b.dataset.v === v));
   if (v === "New") { $("#relForm").hidden = true; $("#pk").hidden = false; $("#relMsg").textContent = ""; }
   window.scrollTo(0, 0); $("#cab").scrollTo({ top: 0, behavior: "smooth" });
@@ -437,9 +459,9 @@ window.delRel = async id => {
 };
 function openCab(user) {
   $("#uName").textContent = (user.email || "").split("@")[0];
-  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine();
+  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine(); refreshTix();
   if (ch) db.removeChannel(ch);
-  ch = db.channel("rel-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "releases", filter: "user_id=eq." + user.id }, loadMine).subscribe();
+  ch = db.channel("rel-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "releases", filter: "user_id=eq." + user.id }, loadMine).on("postgres_changes", { event: "*", schema: "public", table: "tickets" }, () => refreshTix()).on("postgres_changes", { event: "*", schema: "public", table: "ticket_messages" }, () => refreshTix()).subscribe();
 }
 setInterval(() => $("#cab").classList.contains("show") && loadMine(), 30000);
 async function loadMine() {
@@ -453,7 +475,7 @@ async function loadMine() {
 }
 
 // ================= АДМИН: релизы и вкладки =================
-$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); $("#paneApps").hidden = b.dataset.t !== "Apps"; $("#paneRels").hidden = b.dataset.t !== "Rels"; });
+$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); ["Apps", "Rels", "Tix"].forEach(n => $("#pane" + n).hidden = b.dataset.t !== n); });
 const YN = x => x ? "Да" : "Нет";
 async function loadRels() {
   const { data, error } = await db.from("releases").select("*").order("created_at", { ascending: false });
@@ -486,7 +508,48 @@ window.editReason = async id => {
 // выход (и из админки, и из кабинета артиста)
 const doLogout = async () => { await db.auth.signOut(); if (ch) { db.removeChannel(ch); ch = null; } $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); document.body.style.overflow = ""; };
 $("#logout").onclick = doLogout; $("#cLogout").onclick = doLogout;
-$("#reload").onclick = () => { loadApps(); loadRels(); };
+$("#reload").onclick = () => { loadApps(); loadRels(); loadTix($("#tlist"), true); };
+
+// ================= ТЕМА =================
+const setTheme = t => { document.documentElement.dataset.theme = t; $("#themeBtn").textContent = t === "dark" ? "☀️" : "🌙"; try { localStorage.setItem("theme", t); } catch (e) {} };
+$("#themeBtn").textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙";
+$("#themeBtn").onclick = () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+
+// ================= ПОДДЕРЖКА =================
+const openT = new Set();
+const refreshTix = () => { if ($("#cab").classList.contains("show")) loadTix($("#tix"), false); if ($("#adm").classList.contains("show")) loadTix($("#tlist"), true); };
+setInterval(refreshTix, 30000);
+async function loadTix(el, admin) {
+  if (el.contains(document.activeElement) && document.activeElement.tagName === "TEXTAREA") return;
+  const [t, m] = await Promise.all([db.from("tickets").select("*").order("created_at", { ascending: false }), db.from("ticket_messages").select("*").order("created_at")]);
+  if (t.error || m.error) { console.error(t.error || m.error); return; }
+  if (admin) $("#tcnt").textContent = "(" + t.data.filter(x => x.status === "Открыто").length + " откр.)";
+  el.innerHTML = t.data.length ? t.data.map(x => `<details class="tk" data-id="${x.id}"${openT.has(x.id) ? " open" : ""}><summary><b>№${x.num}</b> · ${esc(x.topic)} — ${esc(x.subject)}${admin ? ` <small>(${esc(x.login)})</small>` : ""} <span class="bd s-${esc(x.status)}">${esc(x.status)}</span></summary>
+    <div class="th">${m.data.filter(y => y.ticket_id === x.id).map(y => `<div class="mg${y.is_admin ? " ad2" : ""}"><small>${y.is_admin ? "Поддержка" : "Артист"} · ${new Date(y.created_at).toLocaleString("ru-RU")}</small><p>${esc(y.text)}</p></div>`).join("")}</div>
+    ${admin ? `<select onchange="setTk('${x.id}',this.value)">${["Открыто", "Закрыто"].map(s => `<option${s === x.status ? " selected" : ""}>${s}</option>`).join("")}</select>` : ""}
+    ${admin || x.status === "Открыто" ? `<textarea placeholder="Ваш ответ…" maxlength="3000"></textarea><button class="btn btn-p sm" onclick="sendMsg('${x.id}',${admin},this)">Отправить</button>` : '<p class="emp">Запрос закрыт. Если вопрос остался — создайте новый.</p>'}</details>`).join("") : '<p class="emp">Запросов пока нет.</p>';
+  el.querySelectorAll("details").forEach(d => d.ontoggle = () => d.open ? openT.add(d.dataset.id) : openT.delete(d.dataset.id));
+}
+window.sendMsg = async (id, admin, btn) => {
+  const ta = btn.previousElementSibling, text = ta.value.trim(); if (!text) return;
+  btn.disabled = true; const { data: { user } } = await db.auth.getUser();
+  const { error } = await db.from("ticket_messages").insert({ ticket_id: id, user_id: user.id, is_admin: admin, text });
+  btn.disabled = false; if (error) { alert("Ошибка: " + error.message); return; }
+  ta.value = ""; refreshTix();
+};
+window.setTk = async (id, status) => { const { error } = await db.from("tickets").update({ status }).eq("id", id); if (error) alert("Ошибка: " + error.message); refreshTix(); };
+$("#tkForm").onsubmit = async e => {
+  e.preventDefault(); const f = e.target, m = $("#tkMsg"), btn = f.querySelector("button");
+  if (!db) { m.className = "msg err"; m.textContent = NODB; return; }
+  btn.disabled = true; m.className = "msg"; m.textContent = "Отправляем…";
+  try {
+    const { data: { user } } = await db.auth.getUser();
+    const t = await db.from("tickets").insert({ user_id: user.id, login: user.email, topic: f.topic.value, subject: f.subject.value.trim() }).select().single(); if (t.error) throw t.error;
+    const r = await db.from("ticket_messages").insert({ ticket_id: t.data.id, user_id: user.id, is_admin: false, text: f.text.value.trim() }); if (r.error) throw r.error;
+    f.reset(); m.className = "msg ok"; m.textContent = "Запрос №" + t.data.num + " отправлен. Ответ появится ниже 💜"; refreshTix();
+  } catch (x) { console.error(x); m.className = "msg err"; m.textContent = "Не удалось отправить: " + (x.message || x); }
+  btn.disabled = false;
+};
 </script>
 </body>
 </html>
