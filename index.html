@@ -68,6 +68,7 @@ label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
 input,textarea{width:100%;padding:13px 16px;border-radius:14px;border:2px solid #ece4fb;font:inherit;background:#faf8ff;transition:.2s;outline:0}
 input:focus,textarea:focus{border-color:var(--p2);background:#fff;box-shadow:0 0 0 4px #8b5cf622}
 textarea{min-height:100px;resize:vertical}
+.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:5px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .msg{margin-top:14px;font-size:14px;font-weight:500;min-height:20px}.err{color:#c0262d}.ok{color:#15803d}
 .full{width:100%;justify-content:center;margin-top:20px}
@@ -148,12 +149,16 @@ textarea{min-height:100px;resize:vertical}
   <form id="applyForm">
     <label>Псевдоним вашего артиста</label><input name="artist" required maxlength="100">
     <label>Небольшой рассказ о вас и вашем творчестве</label><textarea name="about" required maxlength="2000"></textarea>
-    <label>Карточки на площадках <span style="font-weight:400;color:var(--mut)">(если нет — поставьте «—»)</span></label>
+    <label>Карточки на площадках <span style="font-weight:400;color:var(--mut)">(ссылки; если нет — поставьте «—»)</span></label>
     <div class="two">
-      <input name="spotify" placeholder="Spotify" value="—" required>
-      <input name="yandex" placeholder="Яндекс Музыка" value="—" required>
-      <input name="vk" placeholder="VK Музыка" value="—" required>
-      <input name="other" placeholder="SoundCloud / YouTube" value="—" required>
+      <div><small class="fl">Spotify</small><input name="spotify" placeholder="Ссылка на Spotify" value="—" required></div>
+      <div><small class="fl">Apple Music</small><input name="apple" placeholder="Ссылка на Apple Music" value="—" required></div>
+    </div>
+    <label>Социальные сети <span style="font-weight:400;color:var(--mut)">(ссылки; если нет — поставьте «—»)</span></label>
+    <div class="two">
+      <div><small class="fl">TikTok</small><input name="tiktok" placeholder="Ссылка на TikTok" value="—" required></div>
+      <div><small class="fl">YouTube</small><input name="youtube" placeholder="Ссылка на YouTube" value="—" required></div>
+      <div style="grid-column:1/-1"><small class="fl">SoundCloud</small><input name="soundcloud" placeholder="Ссылка на SoundCloud" value="—" required></div>
     </div>
     <label>Электронная почта</label><input type="email" name="email" required maxlength="150">
     <button class="btn btn-y full" type="submit">Отправить заявку</button>
@@ -164,7 +169,7 @@ textarea{min-height:100px;resize:vertical}
 <!-- Вход / регистрация -->
 <div class="ov" id="authOv"><div class="md">
   <button class="x" data-close>×</button>
-  <div class="tabs"><button class="a" data-tab="in">Вход</button><button data-tab="up">Регистрация</button></div>
+  <h3>Вход в кабинет</h3><p class="sub">Логин и пароль выдаёт лейбл после одобрения вашей заявки.</p>
   <form id="authForm">
     <label>Логин или e-mail</label><input name="login" required autocomplete="username">
     <label>Пароль</label><input type="password" name="pass" required minlength="6" autocomplete="current-password">
@@ -216,19 +221,14 @@ $("#applyForm").onsubmit = async e => {
   m.className = "msg"; m.textContent = "Отправляем…";
   const { error } = await db.from("applications").insert({
     artist_name: f.get("artist").trim(), about: f.get("about").trim(), email: f.get("email").trim(),
-    links: { spotify: f.get("spotify"), yandex: f.get("yandex"), vk: f.get("vk"), other: f.get("other") }
+    links: { spotify: f.get("spotify"), apple: f.get("apple"), tiktok: f.get("tiktok"), youtube: f.get("youtube"), soundcloud: f.get("soundcloud") }
   });
   if (error) { m.className = "msg err"; m.textContent = "Не удалось отправить: " + error.message; console.error(error); return; }
   m.className = "msg ok"; m.textContent = "Заявка отправлена! Мы скоро свяжемся с вами 💜";
-  e.target.reset(); ["spotify","yandex","vk","other"].forEach(n => e.target[n].value = "—");
+  e.target.reset(); ["spotify","apple","tiktok","youtube","soundcloud"].forEach(n => e.target[n].value = "—");
 };
 
-// вход / регистрация
-let mode = "in";
-$$("[data-tab]").forEach(b => b.onclick = () => {
-  mode = b.dataset.tab; $$("[data-tab]").forEach(x => x.classList.toggle("a", x === b));
-  $("#authSubmit").textContent = mode === "in" ? "Войти" : "Зарегистрироваться"; $("#authMsg").textContent = "";
-});
+// вход
 $("#loginBtn").onclick = async () => {
   let session = null;
   try { session = (await db.auth.getSession()).data.session; } catch (err) { console.error(err); }
@@ -240,12 +240,6 @@ $("#authForm").onsubmit = async e => {
   let login = f.get("login").trim(); if (!login.includes("@")) login += "@" + LOGIN_DOMAIN;
   if (!db) { m.className = "msg err"; m.textContent = NODB; return; }
   m.className = "msg"; m.textContent = "Подождите…";
-  if (mode === "up") {
-    const { error } = await db.auth.signUp({ email: login, password: f.get("pass") });
-    m.className = error ? "msg err" : "msg ok";
-    m.textContent = error ? "Ошибка регистрации: " + error.message : "Готово! Проверьте почту для подтверждения.";
-    return;
-  }
   const { data, error } = await db.auth.signInWithPassword({ email: login, password: f.get("pass") });
   if (error) { m.className = "msg err"; m.textContent = "Ошибка входа: " + error.message; console.error(error); return; }
   e.target.reset(); m.textContent = ""; enter(data.user);
@@ -256,7 +250,7 @@ async function enter(user) {
   closeAll();
   if (error) { alert("Не удалось проверить права админа: " + error.message); return; }
   if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); }
-  else alert("Вы вошли, но этого пользователя нет в таблице admins. Личный кабинет артиста скоро появится 💜");
+  else alert("Вы вошли. Личный кабинет артиста скоро появится 💜");
 }
 
 // админка
@@ -264,7 +258,7 @@ async function loadApps() {
   const { data, error } = await db.from("applications").select("*").order("created_at", { ascending:false });
   if (error) { $("#list").innerHTML = '<p class="err">Ошибка загрузки</p>'; return; }
   $("#cnt").textContent = "(" + data.length + ")";
-  const names = { spotify:"Spotify", yandex:"Яндекс Музыка", vk:"VK Музыка", other:"SoundCloud/YouTube" };
+  const names = { spotify:"Spotify", apple:"Apple Music", tiktok:"TikTok", youtube:"YouTube", soundcloud:"SoundCloud", yandex:"Яндекс Музыка", vk:"VK Музыка", other:"Другое" };
   $("#list").innerHTML = data.length ? data.map(a => `
     <div class="ap st-${esc(a.status)}">
       <h4>${esc(a.artist_name)}</h4>
