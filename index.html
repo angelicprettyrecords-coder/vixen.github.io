@@ -135,6 +135,8 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 .th{margin:14px 0}.mg{background:var(--pl);border-radius:14px;padding:10px 14px;margin-bottom:8px;max-width:88%}.mg.ad2{background:var(--p);color:#fff;margin-left:auto}.mg.ad2 small{color:#e6dcff}.mg p{white-space:pre-wrap;margin:4px 0 0}.tk textarea{margin:8px 0}
 #albForm{background:var(--card);border-radius:24px;padding:28px;border:1px solid var(--bd);margin-top:14px}#albForm h4{font-family:Unbounded;font-size:16px;margin:30px 0 4px;color:var(--p)}
 .trk{border:1px solid var(--bd);background:var(--in);border-radius:20px;padding:20px;margin:18px 0}.trk h4{color:var(--ink)!important}
+#catForm{background:var(--card);border-radius:20px;padding:24px;border:1px solid var(--bd);margin-bottom:22px;max-width:640px}
+.bd.s-Готово{background:#dcf5e3;color:#15803d}[data-theme=dark] .bd.s-Готово{background:#0f2e1a;color:#6ee79a}
 </style>
 </head>
 <body>
@@ -142,7 +144,7 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 <nav>
   <a href="#top" class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b></a>
   <div class="links">
-    <a href="about.html">О лейбле</a><a href="rules.html">Правила</a><a href="#why">Преимущества</a>
+    <a href="about.html">О лейбле</a><a href="about.html#catalog">Каталог</a><a href="rules.html">Правила</a><a href="#why">Преимущества</a>
     <button class="btn btn-o sm" id="themeBtn" aria-label="Сменить тему">☀️</button>
     <button class="btn btn-o sm" id="loginBtn">Войти</button>
     <button class="btn btn-y sm" data-apply>Подать заявку</button>
@@ -178,7 +180,7 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
   <div class="stats rv">
     <div><b>50+</b><p>релизов</p></div>
     <div><b>20+</b><p>артистов</p></div>
-    <div><b>50К+</b><p>прослушиваний</p></div>
+    <div><b>1M+</b><p>прослушиваний</p></div>
     <div><b>100%</b><p>прав у артиста</p></div>
   </div>
 </section>
@@ -231,8 +233,13 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 <div class="adm" id="adm">
   <div class="ah"><span class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b> · Админ</span>
     <div style="display:flex;gap:8px"><button class="btn btn-o sm" id="reload">Обновить</button><button class="btn btn-p sm" id="logout">Выйти</button></div></div>
-  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button></div>
-  <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div><div id="paneTix" hidden><div id="tlist"></div></div></div>
+  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button><button data-t="Svc">Genius / BandLink <span id="scnt"></span></button><button data-t="Cat">Каталог</button></div>
+  <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div><div id="paneTix" hidden><div id="tlist"></div></div><div id="paneSvc" hidden><div id="slist"></div></div>
+  <div id="paneCat" hidden><form id="catForm"><h3 style="font-family:Unbounded;font-size:17px;margin-bottom:6px">Добавить релиз в каталог</h3><p class="hint">Каталог показывается на странице «О лейбле».</p>
+    <label>Обложка *</label><input type="file" name="cover" accept="image/jpeg,image/png" required>
+    <label>Название *</label><input name="title" required maxlength="150"><label>Артист *</label><input name="artist" required maxlength="100">
+    <label>Ссылка на BandLink *</label><input type="url" name="link" required placeholder="https://band.link/…"><label>Дата релиза *</label><input type="date" name="date" required>
+    <button class="btn btn-y full" type="submit">Добавить в каталог</button><div class="msg" id="catMsg"></div></form><div id="clist"></div></div></div>
 </div>
 
 
@@ -246,6 +253,7 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
   <main class="cm">
     <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!</h2>
       <div class="st2" id="st"></div>
+      <div class="rowb"><h3>Сервисы</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o sm" id="hG">🎵 Добавить на Genius при выходе</button><button class="btn btn-o sm" id="hB">🔗 Сделать BandLink</button></div></div><div id="svList" style="margin-bottom:32px"></div>
       <div class="rowb"><h3>Мои релизы</h3><button class="btn btn-y sm" id="addRel">+ Добавить релиз</button></div>
       <div id="mine"></div></div>
     <div id="vNew" hidden><h2>Отгрузить релиз</h2><p class="sub">Выберите, что отправить на модерацию.</p>
@@ -324,7 +332,7 @@ async function enter(user) {
   const { data, error } = await db.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
   closeAll();
   if (error) { alert("Не удалось проверить права админа: " + error.message); return; }
-  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); loadTix($("#tlist"), true); }
+  if (data) { $("#adm").classList.add("show"); document.body.style.overflow = "hidden"; loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); }
   else openCab(user);
 }
 
@@ -421,6 +429,7 @@ $("#relForm").onsubmit = async e => {
   const cred = {};
   ["w","p","pr","e1","e2"].forEach(k => cred[k] = [...$$(`#relForm .cg[data-k="${k}"] .cr`)].map(r => ({ name: r.querySelector("input").value.trim(), role: r.querySelector("select").value })).filter(x => x.name));
   for (const k of ["w","p","e1","e2"]) if (cred[k].some(x => !x.role)) return err("Укажите роль для каждого автора.");
+  if (!await askSend("single", v("title"))) return;
   btn.disabled = true; m.className = "msg"; m.textContent = "Загружаем файлы…";
   try {
     const { data: { user } } = await db.auth.getUser();
@@ -462,9 +471,9 @@ window.delRel = async id => {
 };
 function openCab(user) {
   $("#uName").textContent = (user.email || "").split("@")[0];
-  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine(); refreshTix();
+  $("#cab").classList.add("show"); document.body.style.overflow = "hidden"; cabView("Home"); loadMine(); refreshTix(); loadSvc();
   if (ch) db.removeChannel(ch);
-  ch = db.channel("rel-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "releases", filter: "user_id=eq." + user.id }, loadMine).on("postgres_changes", { event: "*", schema: "public", table: "tickets" }, () => refreshTix()).on("postgres_changes", { event: "*", schema: "public", table: "ticket_messages" }, () => refreshTix()).subscribe();
+  ch = db.channel("rel-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "releases", filter: "user_id=eq." + user.id }, loadMine).on("postgres_changes", { event: "*", schema: "public", table: "tickets" }, () => refreshTix()).on("postgres_changes", { event: "*", schema: "public", table: "ticket_messages" }, () => refreshTix()).on("postgres_changes", { event: "*", schema: "public", table: "services" }, () => loadSvc()).subscribe();
 }
 setInterval(() => $("#cab").classList.contains("show") && loadMine(), 30000);
 async function loadMine() {
@@ -478,7 +487,7 @@ async function loadMine() {
 }
 
 // ================= АДМИН: релизы и вкладки =================
-$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); ["Apps", "Rels", "Tix"].forEach(n => $("#pane" + n).hidden = b.dataset.t !== n); });
+$$("#atabs button").forEach(b => b.onclick = () => { $$("#atabs button").forEach(x => x.classList.toggle("a", x === b)); ["Apps", "Rels", "Tix", "Svc", "Cat"].forEach(n => $("#pane" + n).hidden = b.dataset.t !== n); });
 const YN = x => x ? "Да" : "Нет";
 async function loadRels() {
   const { data, error } = await db.from("releases").select("*").order("created_at", { ascending: false });
@@ -512,7 +521,7 @@ window.editReason = async id => {
 // выход (и из админки, и из кабинета артиста)
 const doLogout = async () => { await db.auth.signOut(); if (ch) { db.removeChannel(ch); ch = null; } $("#adm").classList.remove("show"); $("#cab").classList.remove("show"); document.body.style.overflow = ""; };
 $("#logout").onclick = doLogout; $("#cLogout").onclick = doLogout;
-$("#reload").onclick = () => { loadApps(); loadRels(); loadTix($("#tlist"), true); };
+$("#reload").onclick = () => { loadApps(); loadRels(); loadTix($("#tlist"), true); loadSvcAdmin(); loadCat(); };
 
 // ================= ТЕМА =================
 const setTheme = t => { document.documentElement.dataset.theme = t; $("#themeBtn").textContent = t === "dark" ? "☀️" : "🌙"; try { localStorage.setItem("theme", t); } catch (e) {} };
@@ -620,6 +629,7 @@ $("#albForm").onsubmit = async e => {
     tracks.push({ file: au, title: q(".tTitle").value.trim(), version: q(".tVersion").value.trim(), feat: q(".tFeat").value.trim(), instrumental: yy("ins"), cover: yy("cov"),
       coverInfo: yy("cov") ? { artist: q(".cA").value.trim(), song: q(".cS").value.trim(), permission: yy("cp") } : null, language: q(".tLang").value, explicit: yy("ex"), credits: cred });
   }
+  if (!await askSend("album", v("aTitle"))) return;
   btn.disabled = true; m.className = "msg"; m.textContent = "Загружаем обложку…";
   try {
     const { data: { user } } = await db.auth.getUser(), S = db.storage.from("releases"), dir = user.id + "/" + crypto.randomUUID(), ext = x => x.name.split(".").pop().toLowerCase();
@@ -645,6 +655,95 @@ function albumCard(r, u) {
     <details open><summary>Данные альбома</summary><dl>${dl([["Жанр", d.genre], ["Цифровой релиз", d.digitalDate], ["Первоначальный релиз", d.originalDate], ["Страна записи", d.country], ["Блокчейн", YN(d.blockchain)], ["Publishing", YN(d.publishing)], ["Логин артиста", d.login]])}</dl></details>
     <h4 style="margin:14px 0 6px">Треки</h4>${tr}</div></div>`;
 }
+
+// ================= ПОДТВЕРЖДЕНИЕ, GENIUS, BANDLINK =================
+document.body.insertAdjacentHTML("beforeend", `
+<div class="ov" id="cfOv" style="z-index:70"><div class="md" style="max-width:460px;text-align:center"><h3>Вы уверены?</h3>
+  <p class="sub" style="margin:8px 0 18px">Релиз «<b id="cfT"></b>» будет отправлен на модерацию. Проверьте данные: после отправки изменить их нельзя.</p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn btn-y" id="cfYes">Да, отправить</button><button class="btn btn-o" id="cfNo">Отмена</button></div>
+  <p class="hint" style="margin:24px 0 8px">Дополнительно к релизу:</p>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn btn-o sm" id="cfG">🎵 Добавить на Genius при выходе</button><button class="btn btn-o sm" id="cfB">🔗 Сделать BandLink</button></div><div class="msg" id="cfM"></div></div></div>
+<div class="ov" id="svOv" style="z-index:80"><div class="md"><button class="x" id="svX">×</button><h3 id="svH"></h3><p class="sub" id="svS"></p><form id="svForm"></form></div></div>`);
+function askSend(kind, title) {
+  return new Promise(res => {
+    const o = $("#cfOv"), done = v => { o.classList.remove("show"); res(v); };
+    $("#cfT").textContent = title; $("#cfM").textContent = ""; o.classList.add("show");
+    $("#cfYes").onclick = () => done(true); $("#cfNo").onclick = () => done(false);
+    o.onclick = e => { if (e.target === o) done(false); };
+    $("#cfG").onclick = () => openSv("genius", kind, title); $("#cfB").onclick = () => openSv("bandlink", kind, title);
+  });
+}
+let svType = "";
+function openSv(type, kind = "single", title = "") {
+  svType = type;
+  $("#svH").textContent = type === "genius" ? "Добавить на Genius при выходе" : "Сделать BandLink";
+  $("#svS").textContent = (type === "genius" ? "Мы добавим текст на Genius, когда релиз выйдет." : "Мы создадим страницу релиза BandLink.") + " Заявка отправляется сразу и отдельно от релиза.";
+  $("#svForm").innerHTML = (type === "genius" ? `<label>Тип релиза *</label><div class="yn"><label><input type="radio" name="kind" value="single"${kind === "single" ? " checked" : ""}> Сингл</label><label><input type="radio" name="kind" value="album"${kind === "album" ? " checked" : ""}> Альбом</label></div>` : "") +
+    `<label>Название релиза *</label><input name="rt" required maxlength="150" value="${esc(title)}">` +
+    (type === "genius" ? `<div id="gS"><label>Текст песни *</label><textarea name="lyr" maxlength="20000" style="min-height:180px"></textarea></div><div id="gA" hidden><label>Треки</label><span class="hint">Добавляйте треки по одному: название и текст.</span><div id="gT"></div><button type="button" class="btn btn-o sm" id="gAdd">+ Добавить трек</button></div>` : "") +
+    `<button class="btn btn-y full" type="submit">Отправить заявку</button><div class="msg" id="svM"></div>`;
+  if (type === "genius") gKind();
+  $("#svOv").classList.add("show");
+}
+function gKind() {
+  const al = $("#svForm").elements.kind.value === "album";
+  $("#gS").hidden = al; $("#gA").hidden = !al; if (al && !$("#gT .trk")) gAdd();
+}
+function gAdd() { $("#gT").insertAdjacentHTML("beforeend", `<div class="trk"><input class="gt" placeholder="Название трека" maxlength="150"><textarea class="gl" placeholder="Текст трека" maxlength="20000" style="margin:8px 0;min-height:120px"></textarea><button type="button" class="btn btn-o sm gr">Удалить трек</button></div>`); }
+$("#svForm").addEventListener("change", e => { if (e.target.name === "kind") gKind(); });
+$("#svForm").addEventListener("click", e => { if (e.target.id === "gAdd") gAdd(); if (e.target.classList.contains("gr") && $$("#gT .trk").length > 1) e.target.closest(".trk").remove(); });
+$("#svX").onclick = () => $("#svOv").classList.remove("show");
+$("#hG").onclick = () => openSv("genius"); $("#hB").onclick = () => openSv("bandlink");
+$("#svForm").onsubmit = async e => {
+  e.preventDefault(); const f = e.target, m = $("#svM"), el = f.elements, err = t => { m.className = "msg err"; m.textContent = t; };
+  if (!db) return err(NODB);
+  const data = { title: el.rt.value.trim() };
+  if (svType === "genius") {
+    data.kind = el.kind.value;
+    if (data.kind === "single") { data.lyrics = el.lyr.value.trim(); if (!data.lyrics) return err("Добавьте текст песни."); }
+    else { data.tracks = [...f.querySelectorAll(".trk")].map(t => ({ title: t.querySelector(".gt").value.trim(), lyrics: t.querySelector(".gl").value.trim() })); if (data.tracks.some(t => !t.title || !t.lyrics)) return err("Для каждого трека добавьте название и текст."); }
+  }
+  const { data: { user } } = await db.auth.getUser();
+  const r = await db.from("services").insert({ user_id: user.id, login: user.email, type: svType, data });
+  if (r.error) return err("Не удалось отправить: " + r.error.message);
+  m.className = "msg ok"; m.textContent = "Заявка отправлена! 💜"; loadSvc();
+  if ($("#cfOv").classList.contains("show")) { $("#cfM").className = "msg ok"; $("#cfM").textContent = (svType === "genius" ? "Genius" : "BandLink") + ": заявка отправлена ✓"; }
+  setTimeout(() => $("#svOv").classList.remove("show"), 1100);
+};
+const svInfo = x => x.type === "genius" ? (x.data.kind === "album" ? "Альбом, треков: " + x.data.tracks.length : "Сингл") : "Страница релиза";
+async function loadSvc() {
+  const { data, error } = await db.from("services").select("*").order("created_at", { ascending: false }); if (error) return;
+  $("#svList").innerHTML = data.length ? data.map(x => `<div class="rl"><div style="flex:1"><b>${x.type === "genius" ? "🎵 Genius" : "🔗 BandLink"}</b> · ${esc(x.data.title)}<br><small style="color:var(--mut)">${svInfo(x)} · ${new Date(x.created_at).toLocaleDateString("ru-RU")}</small></div><span class="bd s-${esc(x.status)}">${esc(x.status)}</span></div>`).join("") : '<p class="emp">Заявок на Genius и BandLink пока нет.</p>';
+}
+setInterval(() => $("#cab").classList.contains("show") && loadSvc(), 30000);
+
+// ---- админ: заявки Genius / BandLink ----
+async function loadSvcAdmin() {
+  const { data, error } = await db.from("services").select("*").order("created_at", { ascending: false }); if (error) return;
+  $("#scnt").textContent = "(" + data.filter(x => x.status === "Новая").length + " нов.)";
+  $("#slist").innerHTML = data.length ? data.map(x => { const d = x.data, pre = t => `<p style="white-space:pre-wrap;color:var(--mut)">${esc(t)}</p>`;
+    const body = x.type !== "genius" ? "" : d.kind === "album" ? d.tracks.map((t, i) => `<details><summary>${i + 1}. ${esc(t.title)}</summary>${pre(t.lyrics)}</details>`).join("") : `<details><summary>Текст песни</summary>${pre(d.lyrics)}</details>`;
+    return `<div class="ad"><div><h4 style="font-family:Unbounded">${x.type === "genius" ? "🎵 Genius" : "🔗 BandLink"} · ${esc(d.title)}</h4><small>${esc(x.login)} · ${svInfo(x)} · ${new Date(x.created_at).toLocaleString("ru-RU")}</small>${body}<br>
+      <select onchange="setSvc('${x.id}',this.value)">${["Новая", "В работе", "Готово"].map(s => `<option${s === x.status ? " selected" : ""}>${s}</option>`).join("")}</select></div></div>`; }).join("") : "<p>Заявок пока нет.</p>";
+}
+window.setSvc = async (id, status) => { const { error } = await db.from("services").update({ status }).eq("id", id); if (error) alert("Ошибка: " + error.message); loadSvcAdmin(); };
+
+// ---- админ: каталог ----
+async function loadCat() {
+  const { data, error } = await db.from("catalog").select("*").order("release_date", { ascending: false }); if (error) return;
+  $("#clist").innerHTML = data.length ? data.map(c => `<div class="rl"><img src="${db.storage.from("catalog").getPublicUrl(c.cover_path).data.publicUrl}" alt=""><div style="flex:1"><b>${esc(c.title)}</b><br><small style="color:var(--mut)">${esc(c.artist)} · ${esc(c.release_date)} · <a href="${esc(c.bandlink)}" target="_blank" rel="noopener" style="color:var(--p)">BandLink</a></small></div><button class="btn btn-o sm" onclick="delCat('${c.id}','${esc(c.cover_path)}')">Удалить</button></div>`).join("") : '<p class="emp">В каталоге пока пусто.</p>';
+}
+window.delCat = async (id, path) => { if (!confirm("Удалить релиз из каталога?")) return; await db.storage.from("catalog").remove([path]); await db.from("catalog").delete().eq("id", id); loadCat(); };
+$("#catForm").onsubmit = async e => {
+  e.preventDefault(); const f = e.target, el = f.elements, m = $("#catMsg"), file = el.cover.files[0], err = t => { m.className = "msg err"; m.textContent = t; };
+  if (!/^https?:\/\//i.test(el.link.value.trim())) return err("Ссылка должна начинаться с https://");
+  m.className = "msg"; m.textContent = "Добавляем…";
+  const path = crypto.randomUUID() + "." + file.name.split(".").pop().toLowerCase();
+  let r = await db.storage.from("catalog").upload(path, file); if (r.error) return err("Не удалось загрузить обложку: " + r.error.message);
+  r = await db.from("catalog").insert({ title: el.title.value.trim(), artist: el.artist.value.trim(), bandlink: el.link.value.trim(), release_date: el.date.value, cover_path: path });
+  if (r.error) return err("Не удалось добавить: " + r.error.message);
+  f.reset(); m.className = "msg ok"; m.textContent = "Релиз добавлен в каталог ✓"; loadCat();
+};
 </script>
 </body>
 </html>
