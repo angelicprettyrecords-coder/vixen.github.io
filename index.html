@@ -146,6 +146,8 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 .stp b{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--y);color:#1b1033;margin-bottom:10px;font-family:Unbounded}
 .agt{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:24px;margin-bottom:22px}.agt h4{font-family:Unbounded;font-size:15px;color:var(--p);margin:20px 0 6px}.agt h4:first-child{margin-top:0}.agt p,.agt li{color:var(--mut);font-size:14.5px}.agt ul{padding-left:20px;margin:6px 0}.agt b{color:var(--ink)}
 label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16px 0 0}.chk input{width:auto;margin-top:5px}
+.rl{flex-wrap:wrap}
+.rl{flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -261,6 +263,7 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
     <button class="sb" data-v="New">⬆️ Отгрузить релиз</button>
     <button class="sb" data-v="Art">🎤 Мои артисты</button>
     <button class="sb" data-v="Agr">📜 Договор V1X3N</button>
+    <button class="sb" data-v="Pwd">🔒 Пароль</button>
     <button class="sb" data-v="Sup">💬 Поддержка</button>
     <button class="sb" id="cHome" style="margin-top:auto">🌐 На сайт</button>
     <button class="sb" id="cLogout">Выйти</button></aside>
@@ -289,6 +292,10 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
         <label class="chk"><input type="checkbox" name="c2"> Я подтверждаю, что имею право дать это разрешение и получил(а) необходимые согласия приглашённых исполнителей.</label>
         <button class="btn btn-y full" type="submit">Подписать соглашение</button><div class="msg" id="agMsg"></div></form>
       <h3 style="margin:32px 0 14px">Мои соглашения</h3><div id="agList"></div></div>
+    <div id="vPwd" hidden><h2>Пароль</h2><p class="sub">Смена пароля от кабинета.</p>
+      <form id="pwForm" style="background:var(--card);border:1px solid var(--bd);border-radius:24px;padding:28px;max-width:480px"><label>Текущий пароль</label><input type="password" name="old" required autocomplete="current-password">
+        <label>Новый пароль (минимум 8 символов)</label><input type="password" name="n1" required minlength="8" autocomplete="new-password"><label>Повторите новый пароль</label><input type="password" name="n2" required autocomplete="new-password">
+        <button class="btn btn-y full" type="submit">Сменить пароль</button><div class="msg" id="pwMsg"></div></form></div>
     <div id="vSup" hidden><h2>Поддержка</h2><p class="sub">Опишите вопрос — ответ появится здесь же. Каждому запросу присваивается номер.</p>
       <form id="tkForm"><label>Тема обращения *</label><select name="topic" required><option value="">Выберите тему…</option><option>Проблема с релизом</option><option>Вопрос по модерации</option><option>Выплаты и отчётность</option><option>Авторские права и роялти</option><option>Снятие релиза с площадок</option><option>Технический вопрос по сайту</option><option>Другое</option></select>
         <label>Заголовок *</label><input name="subject" required maxlength="120" placeholder="Коротко о сути">
@@ -449,10 +456,10 @@ $("#relForm").onsubmit = async e => {
   const err = t => { m.className = "msg err"; m.textContent = t; };
   if (!db) return err(NODB);
   const cover = f.elements.coverFile.files[0], audio = f.elements.audioFile.files[0];
-  const d = await dim(cover);
-  if (!d || d[0] !== d[1] || d[0] < 1440 || d[0] > 3000) return err("Обложка должна быть квадратной: от 1440×1440 до 3000×3000 px" + (d ? ` (у вас ${d[0]}×${d[1]})` : "."));
-  if (!/\.(wav|flac)$/i.test(audio.name)) return err("Аудиофайл должен быть в формате WAV или FLAC.");
-  const t = await dur(audio);
+  const d = cover ? await dim(cover) : null;
+  if (cover && (!d || d[0] !== d[1] || d[0] < 1440 || d[0] > 3000)) return err("Обложка должна быть квадратной: от 1440×1440 до 3000×3000 px" + (d ? ` (у вас ${d[0]}×${d[1]})` : "."));
+  if (audio && !/\.(wav|flac)$/i.test(audio.name)) return err("Аудиофайл должен быть в формате WAV или FLAC.");
+  const t = audio ? await dur(audio) : null;
   if (t !== null && t < 60) return err("Аудио короче 60 секунд.");
   if (y("cover") && (!v("coverArtist") || !v("coverSong"))) return err("Для кавера укажите исполнителя и название оригинала.");
   const cred = {};
@@ -463,14 +470,15 @@ $("#relForm").onsubmit = async e => {
   try {
     const { data: { user } } = await db.auth.getUser();
     const dir = user.id + "/" + crypto.randomUUID(), ext = x => x.name.split(".").pop().toLowerCase();
-    const cp = dir + "/cover." + ext(cover), ap = dir + "/audio." + ext(audio);
-    let r = await db.storage.from("releases").upload(cp, cover); if (r.error) throw r.error;
-    r = await db.storage.from("releases").upload(ap, audio); if (r.error) throw r.error;
+    let cp = FIX ? FIX.cover_path : null, ap = FIX ? FIX.audio_path : null, r;
+    if (cover) { cp = dir + "/cover." + ext(cover); r = await db.storage.from("releases").upload(cp, cover); if (r.error) throw r.error; }
+    if (audio) { ap = dir + "/audio." + ext(audio); r = await db.storage.from("releases").upload(ap, audio); if (r.error) throw r.error; }
     const data = { login: user.email, version: v("version"), artist: v("artist"), feat: featOf($("#relForm .fp")), genre: v("genre"), instrumental: y("instrumental"),
       cover: y("cover"), coverInfo: y("cover") ? { artist: v("coverArtist"), song: v("coverSong"), permission: y("coverPerm") } : null,
       language: v("lang"), digitalDate: v("dDigital"), originalDate: v("dOrig"), explicit: y("explicit"), country: v("country"),
       blockchain: y("blockchain"), publishing: y("publishing"), credits: cred };
     r = await db.from("releases").insert({ user_id: user.id, title: v("title"), data, cover_path: cp, audio_path: ap }); if (r.error) throw r.error;
+    if (FIX) { const old = FIX; FIX = null; const rm = [cover && old.cover_path, audio && old.audio_path].filter(Boolean); if (rm.length) await db.storage.from("releases").remove(rm); await db.from("releases").delete().eq("id", old.id); f.elements.coverFile.required = f.elements.audioFile.required = true; }
     f.reset(); $$("#relForm .chip").forEach(c => c.remove()); $$(".fp").forEach(refreshFp); $("#coverBox").hidden = true; $$("#relForm .crs").forEach(c => c.innerHTML = ""); ["w","p","pr","e1","e2"].forEach(k => addRow(k, $("#relForm")));
     m.className = "msg ok"; m.textContent = "Релиз отправлен на модерацию! 💜";
     loadMine(); setTimeout(() => cabView("Home"), 1400);
@@ -479,9 +487,9 @@ $("#relForm").onsubmit = async e => {
 };
 
 function cabView(v) {
-  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup"; $("#vArt").hidden = v !== "Art"; $("#vAgr").hidden = v !== "Agr";
+  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup"; $("#vArt").hidden = v !== "Art"; $("#vAgr").hidden = v !== "Agr"; $("#vPwd").hidden = v !== "Pwd";
   $$("[data-v]").forEach(b => b.classList.toggle("a", b.dataset.v === v));
-  if (v === "New") { $("#relForm").hidden = true; $("#albForm").hidden = true; $("#pk").hidden = false; $("#relMsg").textContent = ""; }
+  if (v === "New") { if (FIX) resetSingle(); FIX = null; $("#relForm").elements.coverFile.required = $("#relForm").elements.audioFile.required = true; $("#relForm").hidden = true; $("#albForm").hidden = true; $("#pk").hidden = false; $("#relMsg").textContent = ""; }
   window.scrollTo(0, 0); $("#cab").scrollTo({ top: 0, behavior: "smooth" });
 }
 $$("[data-v]").forEach(b => b.onclick = () => { cabView(b.dataset.v); if (b.dataset.v === "Home") $("#st").scrollIntoView({ behavior: "smooth", block: "center" }); });
@@ -511,7 +519,7 @@ async function loadMine() {
   mineData = data; const c = s => data.filter(r => r.status === s).length, l = data[0];
   $("#st").innerHTML = [["Всего релизов", data.length], ["На модерации", c("На модерации")], ["Принято", c("Принято")], ["Доставлено", c("Доставлено")]].map(([n, v]) => `<div class="sc"><b>${v}</b><span>${n}</span></div>`).join("") +
     `<div class="sc w"><span>Последний релиз</span><b>${l ? esc(l.title) + " · " + esc(l.status) : "Пока нет — отгрузите первый!"}</b></div>`;
-  const row = r => `<div class="rl"><div style="flex:1"><b>${esc(r.title)}${r.data.version ? " " + esc(r.data.version) : ""}</b><br><small style="color:var(--mut)">${esc(r.data.artist)} · ${new Date(r.created_at).toLocaleDateString("ru-RU")}${r.data.type === "album" ? " · Альбом, треков: " + r.data.tracks.length : ""}</small>${r.status === "Отклонено" ? `<div class="rj"><b>Причина отклонения:</b> ${esc(r.reject_reason || "не указана")}</div>` : ""}</div><span class="bd s-${esc(r.status)}">${esc(r.status)}</span><button class="btn btn-o sm" onclick="delRel('${r.id}')">Удалить</button></div>`;
+  const row = r => `<div class="rl"><div style="flex:1"><b>${esc(r.title)}${r.data.version ? " " + esc(r.data.version) : ""}</b><br><small style="color:var(--mut)">${esc(r.data.artist)} · ${new Date(r.created_at).toLocaleDateString("ru-RU")}${r.data.type === "album" ? " · Альбом, треков: " + r.data.tracks.length : ""}</small>${r.status === "Отклонено" ? `<div class="rj"><b>Причина отклонения:</b> ${esc(r.reject_reason || "не указана")}</div>` : ""}</div><span class="bd s-${esc(r.status)}">${esc(r.status)}</span>${r.status === "Отклонено" && r.data.type !== "album" ? `<button class="btn btn-y sm" onclick="fixRel('${r.id}')">Исправить и отправить снова</button>` : ""}${r.status === "Доставлено" ? `<button class="btn btn-o sm" onclick="takedown('${r.id}')">Запросить снятие</button>` : ""}<button class="btn btn-o sm" onclick="delRel('${r.id}')">Удалить</button></div>`;
   $("#mine").innerHTML = [["На модерации", "⏳ На модерации"], ["Принято", "✅ Приняты"], ["Доставлено", "🚀 Доставлены"], ["Отклонено", "❌ Отклонены"]].map(([st, t]) => { const a = data.filter(r => r.status === st); return `<div class="tb"><h4>${t}<span>${a.length}</span></h4>${a.length ? a.map(row).join("") : '<p class="emp">Здесь пока пусто.</p>'}</div>`; }).join("");
 }
 
@@ -521,7 +529,7 @@ const YN = x => x ? "Да" : "Нет";
 async function loadRels() {
   const { data, error } = await db.from("releases").select("*").order("created_at", { ascending: false });
   if (error) { $("#rlist").innerHTML = '<p class="err">Ошибка загрузки</p>'; return; }
-  $("#rcnt").textContent = "(" + data.length + ")";
+  $("#rcnt").textContent = "(" + data.length + ")"; RELS = data;
   const S = db.storage.from("releases");
   const sg = async p => { const x = await S.createSignedUrl(p, 3600); return x.data && x.data.signedUrl; };
   const urls = await Promise.all(data.map(async r => { const al = r.data.type === "album"; return [await sg(r.cover_path), al ? null : await sg(r.audio_path), al ? await Promise.all(r.data.tracks.map(t => sg(t.audioPath))) : null]; }));
@@ -532,7 +540,7 @@ async function loadRels() {
       Object.keys(cn).map(k => `<dt>${cn[k]}</dt><dd>${(d.credits[k] || []).map(x => esc(x.name) + " — " + esc(x.role)).join("<br>") || "—"}</dd>`).join("");
     return `<div class="ad"><img src="${urls[i][0] || ""}" alt=""><div><h4 style="font-family:Unbounded">${esc(r.title)} ${esc(d.version || "")}</h4><small>${esc(d.artist)} · ${new Date(r.created_at).toLocaleString("ru-RU")}</small>
       <br>${urls[i][1] ? `<audio controls preload="none" src="${urls[i][1]}" style="margin-top:10px;width:100%"></audio><a href="${urls[i][1]}" download style="color:var(--p);font-size:14px">Скачать аудио</a> · <a href="${urls[i][0]}" target="_blank" style="color:var(--p);font-size:14px">Обложка</a>` : ""}
-      <br><select onchange="setRel('${r.id}',this.value)">${STATUSES.map(s => `<option${s === r.status ? " selected" : ""}>${s}</option>`).join("")}</select>${r.status === "Отклонено" ? `<div class="rj"><b>Причина:</b> ${esc(r.reject_reason || "не указана")} <button class="btn btn-o sm" style="padding:4px 12px" onclick="editReason('${r.id}')">Изменить</button></div>` : ""}
+      <br><button class="btn btn-o sm" onclick="toCat('${r.id}')" style="margin:8px 8px 0 0">В каталог</button><select onchange="setRel('${r.id}',this.value)">${STATUSES.map(s => `<option${s === r.status ? " selected" : ""}>${s}</option>`).join("")}</select>${r.status === "Отклонено" ? `<div class="rj"><b>Причина:</b> ${esc(r.reject_reason || "не указана")} <button class="btn btn-o sm" style="padding:4px 12px" onclick="editReason('${r.id}')">Изменить</button></div>` : ""}
       <details><summary>Все данные релиза</summary><dl>${rows}</dl></details></div></div>`; }).join("") : "<p>Релизов пока нет.</p>";
 }
 window.setRel = async (id, status) => {
@@ -599,7 +607,7 @@ if (location.hash === "#apply") openM("#applyOv"); else if (location.hash === "#
 // ================= АЛЬБОМ =================
 let tid = 0;
 const CN = { w: "Писатели", p: "Издатели", pr: "Продюсеры", e1: "Исполнители и музыканты", e2: "Технические участники" };
-const trackHtml = id => `<div class="trk" data-id="${id}"><div class="rowb"><h4 style="margin:0">Трек <span class="tn"></span></h4><button type="button" class="btn btn-o sm rmt">Удалить трек</button></div>
+const trackHtml = id => `<div class="trk" data-id="${id}"><div class="rowb"><h4 style="margin:0">Трек <span class="tn"></span></h4><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-o sm cpt">Применить язык и авторов ко всем трекам</button><button type="button" class="btn btn-o sm rmt">Удалить трек</button></div></div>
   <label>Название песни *</label><input class="tTitle" required maxlength="150">
   <label>Версия</label><span class="hint">Укажите, если у песни есть версия в скобках, например (Clean), (Speed Up), (Remix).</span><input class="tVersion" maxlength="80">
   <label>При участии исполнителя(ей)</label><span class="hint">Если в треке есть фит, добавьте артистов из списка. Нужного нет — создайте его: у каждого артиста должен быть профиль с псевдонимом и минимум 3 площадками или соцсетями.</span><div class="fp"><div class="chips"></div><div class="fprow"><select class="fpSel"></select><button type="button" class="btn btn-o sm fpAdd">Добавить</button><button type="button" class="btn btn-o sm fpNew">+ Создать артиста</button></div></div>
@@ -619,7 +627,7 @@ $("#albForm").innerHTML = `
   <div class="ct"><div><label>Дата цифрового релиза *</label><input type="date" name="aDigital" required></div><div><label>Дата первоначального релиза *</label><input type="date" name="aOrig" required></div></div>
   <label>Страна записи *</label><select name="aCountry" required>${opts(COUNTRIES, "Выберите страну…")}</select>
   ${yn("aBlockchain", "Блокчейн")}${yn("aPublishing", "Publishing")}
-  <h4>3. Треки</h4><span class="hint">Добавляйте треки по одному: для каждого укажите название, файл и авторов. Минимум 2 трека.</span>
+  <h4>3. Треки</h4><span class="hint">Добавляйте треки по одному: для каждого укажите название, файл и авторов. Минимум 2 трека. Артист, даты релиза и страна записи заданы выше для всего альбома. Язык и авторов можно заполнить в одном треке и скопировать кнопкой «Применить язык и авторов ко всем трекам».</span>
   <div id="tracks"></div><button type="button" class="btn btn-o" id="addTrack">+ Добавить трек</button>
   <button class="btn btn-y full" type="submit" id="albBtn">Отправить альбом на модерацию</button><div class="msg" id="albMsg"></div>`;
 const renum = () => $$("#tracks .trk").forEach((t, i) => t.querySelector(".tn").textContent = i + 1);
@@ -634,6 +642,7 @@ $("#albForm").addEventListener("click", e => {
   const t = e.target.closest(".trk");
   if (e.target.dataset.add) addRow(e.target.dataset.add, t);
   if (e.target.id === "addTrack") addTrack();
+  if (e.target.classList.contains("cpt")) copyTrack(t);
   if (e.target.classList.contains("rmt") && $$("#tracks .trk").length > 1) { t.remove(); renum(); }
 });
 $("#albForm").addEventListener("change", e => { if (/^cov\d/.test(e.target.name || "")) e.target.closest(".trk").querySelector(".cb").hidden = e.target.value !== "yes"; });
@@ -680,7 +689,7 @@ function albumCard(r, u) {
   const d = r.data, dl = a => a.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
   const tr = d.tracks.map((t, j) => `<details><summary><b>${j + 1}. ${esc(t.title)} ${esc(t.version || "")}</b></summary>${u[2][j] ? `<audio controls preload="none" src="${u[2][j]}" style="width:100%;margin-top:8px"></audio><a href="${u[2][j]}" download style="color:var(--p);font-size:14px">Скачать аудио</a>` : ""}<dl>${dl([["При участии", t.feat || "—"], ["Инструментал", YN(t.instrumental)], ["Кавер", t.cover ? `Да — ${t.coverInfo.artist} / ${t.coverInfo.song}, разрешение: ${YN(t.coverInfo.permission)}` : "Нет"], ["Язык", t.language], ["Непристойный контент", YN(t.explicit)]])}${Object.keys(CN).map(k => `<dt>${CN[k]}</dt><dd>${(t.credits[k] || []).map(x => esc(x.name) + " — " + esc(x.role)).join("<br>") || "—"}</dd>`).join("")}</dl></details>`).join("");
   return `<div class="ad"><img src="${u[0] || ""}" alt=""><div><h4 style="font-family:Unbounded">${esc(r.title)} <small>(альбом, ${d.tracks.length} тр.)</small></h4><small>${esc(d.artist)} · ${new Date(r.created_at).toLocaleString("ru-RU")}</small><br>
-    <select onchange="setRel('${r.id}',this.value)">${STATUSES.map(s => `<option${s === r.status ? " selected" : ""}>${s}</option>`).join("")}</select>${r.status === "Отклонено" ? `<div class="rj"><b>Причина:</b> ${esc(r.reject_reason || "не указана")} <button class="btn btn-o sm" style="padding:4px 12px" onclick="editReason('${r.id}')">Изменить</button></div>` : ""}
+    <button class="btn btn-o sm" onclick="toCat('${r.id}')" style="margin:8px 8px 0 0">В каталог</button><select onchange="setRel('${r.id}',this.value)">${STATUSES.map(s => `<option${s === r.status ? " selected" : ""}>${s}</option>`).join("")}</select>${r.status === "Отклонено" ? `<div class="rj"><b>Причина:</b> ${esc(r.reject_reason || "не указана")} <button class="btn btn-o sm" style="padding:4px 12px" onclick="editReason('${r.id}')">Изменить</button></div>` : ""}
     <details open><summary>Данные альбома</summary><dl>${dl([["Жанр", d.genre], ["Цифровой релиз", d.digitalDate], ["Первоначальный релиз", d.originalDate], ["Страна записи", d.country], ["Блокчейн", YN(d.blockchain)], ["Publishing", YN(d.publishing)], ["Логин артиста", d.login]])}</dl></details>
     <h4 style="margin:14px 0 6px">Треки</h4>${tr}</div></div>`;
 }
@@ -931,7 +940,74 @@ window.delArt = async id => {
   const { error } = await db.from("artists").delete().eq("id", id); if (error) alert("Не удалось удалить: " + error.message);
   loadArtists();
 };
+
+// ================= ИСПРАВЛЕНИЕ, СНЯТИЕ, ИСТОРИЯ, ПАРОЛЬ, КАТАЛОГ =================
+var FIX = null, RELS = [];
+const setYN = (f, n, v) => { f.elements[n].value = v ? "yes" : "no"; };
+function resetSingle() {
+  const f = $("#relForm"); f.reset(); f.querySelectorAll(".chip").forEach(c => c.remove()); $("#coverBox").hidden = true;
+  f.querySelectorAll(".crs").forEach(c => c.innerHTML = ""); ["w", "p", "pr", "e1", "e2"].forEach(k => addRow(k, f)); $$(".fp").forEach(refreshFp);
+}
+window.fixRel = id => {
+  const r = mineData.find(x => x.id === id); if (!r) return; const d = r.data;
+  cabView("New"); resetSingle(); $("#pk").hidden = true; const f = $("#relForm"), el = f.elements; f.hidden = false;
+  el.title.value = r.title; el.version.value = d.version || ""; el.artist.value = d.artist; el.genre.value = d.genre;
+  (d.feat ? d.feat.split(", ") : []).forEach(n => addChip(f.querySelector(".fp"), n));
+  setYN(f, "instrumental", d.instrumental); setYN(f, "cover", d.cover); $("#coverBox").hidden = !d.cover;
+  if (d.cover) { el.coverArtist.value = d.coverInfo.artist; el.coverSong.value = d.coverInfo.song; setYN(f, "coverPerm", d.coverInfo.permission); }
+  el.lang.value = d.language; el.dDigital.value = d.digitalDate; el.dOrig.value = d.originalDate; setYN(f, "explicit", d.explicit);
+  el.country.value = d.country; setYN(f, "blockchain", d.blockchain); setYN(f, "publishing", d.publishing);
+  ["w", "p", "pr", "e1", "e2"].forEach(k => { const L = d.credits[k] || []; if (L.length) f.querySelector(`.cg[data-k="${k}"] .crs`).innerHTML = "";
+    L.forEach(x => { addRow(k, f); const row = [...f.querySelectorAll(`.cg[data-k="${k}"] .cr`)].pop(); row.querySelector("input").value = x.name; row.querySelector("select").value = x.role; }); });
+  el.coverFile.required = el.audioFile.required = false; FIX = r;
+  $("#relMsg").className = "msg"; $("#relMsg").textContent = "Исправьте замечания и отправьте снова. Файлы менять необязательно.";
+};
+window.takedown = async id => {
+  const r = mineData.find(x => x.id === id); if (!r) return;
+  if (!confirm(`Отправить запрос на снятие релиза «${r.title}» с площадок?`)) return;
+  const { data: { user } } = await db.auth.getUser();
+  const t = await db.from("tickets").insert({ user_id: user.id, login: user.email, topic: "Снятие релиза с площадок", subject: "Снятие релиза «" + r.title + "»" }).select().single();
+  if (t.error) return alert("Не удалось отправить запрос: " + t.error.message);
+  await db.from("ticket_messages").insert({ ticket_id: t.data.id, user_id: user.id, is_admin: false, text: `Прошу снять релиз «${r.title}» (артист: ${r.data.artist}) со всех площадок.` });
+  alert("Запрос №" + t.data.num + " создан. Ответ придёт в разделе «Поддержка»."); refreshTix();
+};
+$("#pwForm").onsubmit = async e => {
+  e.preventDefault(); const el = e.target.elements, m = $("#pwMsg"), err = t => { m.className = "msg err"; m.textContent = t; };
+  if (el.n1.value.length < 8) return err("Новый пароль: минимум 8 символов."); if (el.n1.value !== el.n2.value) return err("Пароли не совпадают.");
+  const { data: { user } } = await db.auth.getUser();
+  const a = await db.auth.signInWithPassword({ email: user.email, password: el.old.value }); if (a.error) return err("Текущий пароль указан неверно.");
+  const r = await db.auth.updateUser({ password: el.n1.value }); if (r.error) return err("Не удалось сменить пароль: " + r.error.message);
+  e.target.reset(); m.className = "msg ok"; m.textContent = "Пароль изменён ✓";
+};
+window.toCat = async id => {
+  const r = RELS.find(x => x.id === id); if (!r) return;
+  $$("#atabs button").forEach(b => b.dataset.t === "Cat" && b.click());
+  const f = $("#catForm").elements, m = $("#catMsg"); f.title.value = r.title; f.artist.value = r.data.artist; f.date.value = r.data.digitalDate || "";
+  m.className = "msg"; m.textContent = "Подгружаем обложку…";
+  try {
+    const u = await db.storage.from("releases").createSignedUrl(r.cover_path, 600), b = await (await fetch(u.data.signedUrl)).blob(), dt = new DataTransfer();
+    dt.items.add(new File([b], "cover." + r.cover_path.split(".").pop(), { type: b.type })); f.cover.files = dt.files;
+    m.textContent = "Данные подставлены — осталось вставить ссылку на BandLink.";
+  } catch (x) { m.className = "msg err"; m.textContent = "Обложку подставить не удалось — выберите её вручную."; }
+  f.link.focus();
+};
+
+
+// ================= КОПИРОВАНИЕ ЯЗЫКА И АВТОРОВ ПО ВСЕМ ТРЕКАМ =================
+function fillCredits(root, cr) {
+  ["w", "p", "pr", "e1", "e2"].forEach(k => {
+    const box = root.querySelector(`.cg[data-k="${k}"] .crs`); box.innerHTML = "";
+    ((cr && cr[k] && cr[k].length) ? cr[k] : [{}]).forEach(x => { addRow(k, root); const r = box.lastElementChild; r.querySelector("input").value = x.name || ""; if (x.role) r.querySelector("select").value = x.role; });
+  });
+}
+function copyTrack(src) {
+  const dst = [...$$("#tracks .trk")].filter(t => t !== src); if (!dst.length) return;
+  if (!confirm("Скопировать язык и всех авторов из этого трека во все остальные? Уже введённые там данные будут заменены.")) return;
+  const cr = {}; ["w", "p", "pr", "e1", "e2"].forEach(k => cr[k] = [...src.querySelectorAll(`.cg[data-k="${k}"] .cr`)].map(r => ({ name: r.querySelector("input").value.trim(), role: r.querySelector("select").value })).filter(x => x.name));
+  dst.forEach(t => { t.querySelector(".tLang").value = src.querySelector(".tLang").value; fillCredits(t, cr); });
+}
 </script>
 </body>
+</html>
 </html>
 </html>
