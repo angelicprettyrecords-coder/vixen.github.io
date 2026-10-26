@@ -148,7 +148,12 @@ input,textarea,select{color:var(--ink)}select option{background:var(--card);colo
 label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16px 0 0}.chk input{width:auto;margin-top:5px}
 .rl{flex-wrap:wrap}
 .rl{flex-wrap:wrap}
+.blurbox{position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--bd);background:var(--card);max-height:560px}
+.blurbox .txt{padding:26px;filter:blur(7px);user-select:none;pointer-events:none}.blurbox .txt p{color:var(--mut);margin-bottom:14px}
+.blurbox .soon{position:absolute;inset:0;display:grid;place-items:center;font-family:Unbounded;font-weight:900;font-size:clamp(34px,7vw,72px);letter-spacing:.06em;color:#fff;text-shadow:0 0 40px var(--p);background:#00000033}
 </style>
+<link rel="stylesheet" href="halloween.css">
+<script src="halloween.js"></script>
 </head>
 <body>
 
@@ -263,6 +268,7 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
     <button class="sb" data-v="New">⬆️ Отгрузить релиз</button>
     <button class="sb" data-v="Art">🎤 Мои артисты</button>
     <button class="sb" data-v="Agr">📜 Договор V1X3N</button>
+    <button class="sb" data-v="Excl">💎 Эксклюзивный договор</button>
     <button class="sb" data-v="Pwd">🔒 Пароль</button>
     <button class="sb" data-v="Sup">💬 Поддержка</button>
     <button class="sb" id="cHome" style="margin-top:auto">🌐 На сайт</button>
@@ -296,6 +302,8 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
       <form id="pwForm" style="background:var(--card);border:1px solid var(--bd);border-radius:24px;padding:28px;max-width:480px"><label>Текущий пароль</label><input type="password" name="old" required autocomplete="current-password">
         <label>Новый пароль (минимум 8 символов)</label><input type="password" name="n1" required minlength="8" autocomplete="new-password"><label>Повторите новый пароль</label><input type="password" name="n2" required autocomplete="new-password">
         <button class="btn btn-y full" type="submit">Сменить пароль</button><div class="msg" id="pwMsg"></div></form></div>
+    <div id="vExcl" hidden><h2>Эксклюзивный договор</h2><p class="sub">Условия эксклюзивного сотрудничества с лейблом. Раздел появится позже.</p>
+      <div class="blurbox"><div class="txt" aria-hidden="true"><p>Настоящий договор определяет условия эксклюзивного сотрудничества между лейблом и артистом, включая порядок выпуска релизов, продвижения, распределения обязанностей сторон и сроки действия соглашения.</p><p>Стороны согласовывают объём прав, которые передаются лейблу в рамках сотрудничества, территорию и срок их действия, а также порядок их возврата артисту по окончании договора или при досрочном расторжении.</p><p>Лейбл обязуется организовать выпуск и дистрибуцию музыкальных релизов артиста, обеспечить их модерацию, доставку на площадки и поддержку в рамках согласованного плана, а артист обязуется предоставлять материалы надлежащего качества в согласованные сроки.</p><p>Условия вознаграждения, отчётности и расчётов определяются индивидуально и фиксируются в приложении к договору. Порядок внесения изменений, разрешения споров и прекращения сотрудничества описан в заключительных положениях.</p><p>Каждая из сторон гарантирует, что вправе заключить договор и выполнять его условия, не нарушая прав третьих лиц, а также обязуется соблюдать конфиденциальность информации, ставшей известной в ходе сотрудничества.</p><p>Настоящий договор определяет условия эксклюзивного сотрудничества между лейблом и артистом, включая порядок выпуска релизов, продвижения, распределения обязанностей сторон и сроки действия соглашения.</p><p>Стороны согласовывают объём прав, которые передаются лейблу в рамках сотрудничества, территорию и срок их действия, а также порядок их возврата артисту по окончании договора или при досрочном расторжении.</p><p>Лейбл обязуется организовать выпуск и дистрибуцию музыкальных релизов артиста, обеспечить их модерацию, доставку на площадки и поддержку в рамках согласованного плана, а артист обязуется предоставлять материалы надлежащего качества в согласованные сроки.</p><p>Условия вознаграждения, отчётности и расчётов определяются индивидуально и фиксируются в приложении к договору. Порядок внесения изменений, разрешения споров и прекращения сотрудничества описан в заключительных положениях.</p><p>Каждая из сторон гарантирует, что вправе заключить договор и выполнять его условия, не нарушая прав третьих лиц, а также обязуется соблюдать конфиденциальность информации, ставшей известной в ходе сотрудничества.</p><p>Настоящий договор определяет условия эксклюзивного сотрудничества между лейблом и артистом, включая порядок выпуска релизов, продвижения, распределения обязанностей сторон и сроки действия соглашения.</p><p>Стороны согласовывают объём прав, которые передаются лейблу в рамках сотрудничества, территорию и срок их действия, а также порядок их возврата артисту по окончании договора или при досрочном расторжении.</p><p>Лейбл обязуется организовать выпуск и дистрибуцию музыкальных релизов артиста, обеспечить их модерацию, доставку на площадки и поддержку в рамках согласованного плана, а артист обязуется предоставлять материалы надлежащего качества в согласованные сроки.</p><p>Условия вознаграждения, отчётности и расчётов определяются индивидуально и фиксируются в приложении к договору. Порядок внесения изменений, разрешения споров и прекращения сотрудничества описан в заключительных положениях.</p><p>Каждая из сторон гарантирует, что вправе заключить договор и выполнять его условия, не нарушая прав третьих лиц, а также обязуется соблюдать конфиденциальность информации, ставшей известной в ходе сотрудничества.</p></div><div class="soon">Скоро...</div></div></div>
     <div id="vSup" hidden><h2>Поддержка</h2><p class="sub">Опишите вопрос — ответ появится здесь же. Каждому запросу присваивается номер.</p>
       <form id="tkForm"><label>Тема обращения *</label><select name="topic" required><option value="">Выберите тему…</option><option>Проблема с релизом</option><option>Вопрос по модерации</option><option>Выплаты и отчётность</option><option>Авторские права и роялти</option><option>Снятие релиза с площадок</option><option>Технический вопрос по сайту</option><option>Другое</option></select>
         <label>Заголовок *</label><input name="subject" required maxlength="120" placeholder="Коротко о сути">
@@ -487,7 +495,7 @@ $("#relForm").onsubmit = async e => {
 };
 
 function cabView(v) {
-  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup"; $("#vArt").hidden = v !== "Art"; $("#vAgr").hidden = v !== "Agr"; $("#vPwd").hidden = v !== "Pwd";
+  $("#vHome").hidden = v !== "Home"; $("#vNew").hidden = v !== "New"; $("#vSup").hidden = v !== "Sup"; $("#vArt").hidden = v !== "Art"; $("#vAgr").hidden = v !== "Agr"; $("#vPwd").hidden = v !== "Pwd"; $("#vExcl").hidden = v !== "Excl";
   $$("[data-v]").forEach(b => b.classList.toggle("a", b.dataset.v === v));
   if (v === "New") { if (FIX) resetSingle(); FIX = null; $("#relForm").elements.coverFile.required = $("#relForm").elements.audioFile.required = true; $("#relForm").hidden = true; $("#albForm").hidden = true; $("#pk").hidden = false; $("#relMsg").textContent = ""; }
   window.scrollTo(0, 0); $("#cab").scrollTo({ top: 0, behavior: "smooth" });
@@ -1008,6 +1016,4 @@ function copyTrack(src) {
 }
 </script>
 </body>
-</html>
-</html>
 </html>
