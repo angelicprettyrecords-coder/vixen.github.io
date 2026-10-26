@@ -789,12 +789,12 @@ if (db) {
 
 // ================= АРТИСТЫ =================
 const LINKS = [["spotify","Spotify"],["apple","Apple Music"],["facebook","Facebook"],["twitter","Twitter"],["tiktok","TikTok"],["instagram","Instagram"],["snapchat","Snapchat"],["youtube","YouTube"],["soundcloud","SoundCloud"],["vevo","Vevo"],["website","Веб-сайт"],["audiomack","Audiomack"]];
-var myArtists = [], arForced = false, pendingFp = null;
+var myArtists = [], arForced = false, pendingFp = null, arEdit = null, AGR = [];
 document.body.insertAdjacentHTML("beforeend", `
 <div class="ov2" id="arOv" style="z-index:75"><div class="md" style="max-width:640px"><button class="x" id="arX">×</button><h3 id="arH"></h3><p class="sub" id="arS"></p>
   <form id="arForm"><label>Псевдоним артиста *</label><input name="name" required maxlength="100">
     <label>Биография артиста <span style="font-weight:400;color:var(--mut)">(необязательно)</span></label><textarea name="bio" maxlength="2000"></textarea>
-    <label>Аватарка <span style="font-weight:400;color:var(--mut)">(необязательно)</span></label><span class="hint">JPG, PNG или WebP, до 5 МБ. Лучше квадратное фото.</span><input type="file" name="avatar" accept="image/jpeg,image/png,image/webp">
+    <label>Аватарка <span style="font-weight:400;color:var(--mut)">(необязательно)</span></label><span class="hint">JPG, PNG или WebP, до 5 МБ. Лучше квадратное фото.</span><input type="file" name="avatar" accept="image/jpeg,image/png,image/webp"><label class="chk" id="rmAvL" hidden><input type="checkbox" name="rmAv"> Убрать текущую аватарку</label>
     <label>Площадки и социальные сети *</label><span class="hint">Укажите ссылки минимум на <b>3</b> из списка. Остальные можно оставить пустыми.</span>
     <div class="two">${LINKS.map(([k, l]) => `<div><small class="fl">${l}</small><input name="l_${k}" placeholder="https://…" maxlength="300"></div>`).join("")}</div>
     <div class="hint" id="arCnt" style="margin-top:12px"></div>
@@ -804,7 +804,7 @@ const arCount = () => LINKS.filter(([k]) => $("#arForm").elements["l_" + k].valu
 const arCnt = () => { const n = arCount(); $("#arCnt").innerHTML = `Заполнено: <b style="color:${n >= 3 ? "#16a34a" : "var(--mut)"}">${n}</b> из минимум 3`; };
 $("#arForm").addEventListener("input", arCnt);
 function openArtistForm() {
-  $("#arForm").reset(); $("#arMsg").textContent = ""; arCnt();
+  $("#arForm").reset(); $("#arMsg").textContent = ""; arCnt(); arEdit = null; $("#rmAvL").hidden = true; $("#arForm").elements.name.disabled = false; $("#arForm button[type=submit]").textContent = "Создать артиста";
   $("#arH").textContent = arForced ? "Создайте своего основного артиста" : "Создать нового артиста";
   $("#arS").textContent = arForced ? "Чтобы пользоваться кабинетом, сначала создайте основного артиста: псевдоним и минимум 3 площадки или соцсети." : "Укажите псевдоним и минимум 3 площадки или соцсети.";
   $("#arX").hidden = arForced; $("#arOut").hidden = !arForced; $("#arOv").classList.add("show");
@@ -818,14 +818,14 @@ async function loadArtists() {
   myArtists = data; fillArt(); fillAgr(); $$(".fp").forEach(refreshFp);
   const S = db.storage.from("releases");
   const urls = await Promise.all(data.map(async a => { if (!a.avatar_path) return null; const x = await S.createSignedUrl(a.avatar_path, 3600); return x.data && x.data.signedUrl; }));
-  $("#artList").innerHTML = data.map((a, i) => `<div class="rl">${urls[i] ? `<img src="${urls[i]}" alt="">` : `<div class="ph" style="display:grid;place-items:center;font-family:Unbounded;color:var(--p)">${esc(a.name.charAt(0).toUpperCase())}</div>`}<div style="flex:1"><b>${esc(a.name)}</b>${i === 0 ? ' <span class="bd s-Готово">основной</span>' : ""}<br><small style="color:var(--mut)">Площадок и соцсетей: ${Object.keys(a.links || {}).length}${a.bio ? " · " + esc(a.bio.slice(0, 90)) + (a.bio.length > 90 ? "…" : "") : ""}</small></div></div>`).join("");
+  $("#artList").innerHTML = data.map((a, i) => `<div class="rl">${urls[i] ? `<img src="${urls[i]}" alt="">` : `<div class="ph" style="display:grid;place-items:center;font-family:Unbounded;color:var(--p)">${esc(a.name.charAt(0).toUpperCase())}</div>`}<div style="flex:1"><b>${esc(a.name)}</b>${i === 0 ? ' <span class="bd s-Готово">основной</span>' : ""}<br><small style="color:var(--mut)">Площадок и соцсетей: ${Object.keys(a.links || {}).length}${a.bio ? " · " + esc(a.bio.slice(0, 90)) + (a.bio.length > 90 ? "…" : "") : ""}</small></div><button class="btn btn-o sm" onclick="editArt('${a.id}')">Изменить</button><button class="btn btn-o sm" onclick="delArt('${a.id}')">Удалить</button></div>`).join("");
   if (!data.length && $("#cab").classList.contains("show")) { arForced = true; openArtistForm(); }
 }
 $("#arForm").onsubmit = async e => {
   e.preventDefault(); const f = e.target, el = f.elements, m = $("#arMsg"), btn = f.querySelector("button[type=submit]"), err = t => { m.className = "msg err"; m.textContent = t; };
   if (!db) return err(NODB);
   const name = el.name.value.trim(), links = {};
-  if (myArtists.some(a => a.name.toLowerCase() === name.toLowerCase())) return err("Артист с таким псевдонимом у вас уже есть.");
+  if (myArtists.some(a => a !== arEdit && a.name.toLowerCase() === name.toLowerCase())) return err("Артист с таким псевдонимом у вас уже есть.");
   for (const [k, l] of LINKS) {
     let v = el["l_" + k].value.trim(); if (!v) continue;
     if (!/^https?:\/\//i.test(v)) v = "https://" + v;
@@ -834,12 +834,18 @@ $("#arForm").onsubmit = async e => {
   }
   const n = Object.keys(links).length; if (n < 3) return err(`Укажите минимум 3 площадки или соцсети (сейчас: ${n}).`);
   const file = el.avatar.files[0]; if (file && (!/^image\//.test(file.type) || file.size > 5 * 1024 * 1024)) return err("Аватарка: изображение до 5 МБ.");
-  btn.disabled = true; m.className = "msg"; m.textContent = "Создаём…";
+  btn.disabled = true; m.className = "msg"; m.textContent = arEdit ? "Сохраняем…" : "Создаём…";
   try {
     const { data: { user } } = await db.auth.getUser(); let ap = null;
     if (file) { ap = user.id + "/avatar_" + crypto.randomUUID() + "." + file.name.split(".").pop().toLowerCase(); const u = await db.storage.from("releases").upload(ap, file); if (u.error) throw u.error; }
-    const r = await db.from("artists").insert({ user_id: user.id, login: user.email, name, bio: el.bio.value.trim() || null, avatar_path: ap, links }); if (r.error) throw r.error;
-    $("#arOv").classList.remove("show"); arForced = false; await loadArtists(); if (pendingFp) { addChip(pendingFp, name); pendingFp = null; }
+    let r;
+    if (arEdit) {
+      const newAp = file ? ap : (el.rmAv.checked ? null : arEdit.avatar_path);
+      r = await db.from("artists").update({ name, bio: el.bio.value.trim() || null, avatar_path: newAp, links }).eq("id", arEdit.id);
+      if (!r.error && arEdit.avatar_path && newAp !== arEdit.avatar_path) await db.storage.from("releases").remove([arEdit.avatar_path]);
+    } else r = await db.from("artists").insert({ user_id: user.id, login: user.email, name, bio: el.bio.value.trim() || null, avatar_path: ap, links });
+    if (r.error) throw r.error;
+    $("#arOv").classList.remove("show"); arForced = false; arEdit = null; await loadArtists(); if (pendingFp) { addChip(pendingFp, name); pendingFp = null; }
   } catch (x) { console.error(x); err("Не удалось создать артиста: " + (x.message || x)); }
   btn.disabled = false;
 };
@@ -879,7 +885,7 @@ $$(".fp").forEach(refreshFp);
 function fillAgr() { $("#agArt").innerHTML = myArtists.map((a, i) => `<option value="${esc(a.name)}">${esc(a.name)}${i === 0 ? " (основной)" : ""}</option>`).join(""); }
 const dt = x => new Date(x).toLocaleDateString("ru-RU");
 async function loadAgr() {
-  const { data, error } = await db.from("agreements").select("*").order("created_at", { ascending: false }); if (error) return;
+  const { data, error } = await db.from("agreements").select("*").order("created_at", { ascending: false }); if (error) return; AGR = data;
   $("#agList").innerHTML = data.length ? data.map(a => `<div class="rl"><div style="flex:1"><b>${esc(a.artist_name)}</b><br><small style="color:var(--mut)">Подписано: ${esc(a.signer_name)} · ${dt(a.created_at)}${a.revoked_at ? " · отозвано " + dt(a.revoked_at) : ""}</small></div><span class="bd s-${a.status === "Действует" ? "Готово" : "Закрыто"}">${esc(a.status)}</span>${a.status === "Действует" ? `<button class="btn btn-o sm" onclick="revokeAgr('${a.id}')">Отозвать</button>` : ""}</div>`).join("") : '<p class="emp">Вы ещё не подписывали соглашение — это необязательно.</p>';
 }
 window.revokeAgr = async id => {
@@ -902,6 +908,30 @@ async function loadAgrAdmin() {
   const { data, error } = await db.from("agreements").select("*").order("created_at", { ascending: false }); if (error) return;
   $("#aglist").innerHTML = data.length ? data.map(a => `<div class="rl"><div style="flex:1"><b>${esc(a.artist_name)}</b><br><small style="color:var(--mut)">${esc(a.login)} · подписант: ${esc(a.signer_name)} · ${dt(a.created_at)}${a.revoked_at ? " · отозвано " + dt(a.revoked_at) : ""}</small></div><span class="bd s-${a.status === "Действует" ? "Готово" : "Закрыто"}">${esc(a.status)}</span></div>`).join("") : '<p class="emp">Соглашений пока нет.</p>';
 }
+
+// ================= ИЗМЕНЕНИЕ И УДАЛЕНИЕ АРТИСТА =================
+const hasAgr = a => AGR.some(g => g.status === "Действует" && g.artist_name === a.name);
+window.editArt = id => {
+  const a = myArtists.find(x => x.id === id); if (!a) return;
+  arForced = false; pendingFp = null; openArtistForm(); arEdit = a;
+  const f = $("#arForm").elements, lock = hasAgr(a);
+  $("#arH").textContent = "Изменить артиста";
+  $("#arS").textContent = lock ? "Псевдоним нельзя менять, пока действует соглашение V1X3N: сначала отзовите его. Остальное можно менять." : "Изменения не затронут уже отправленные релизы: в них останется прежний псевдоним. Минимум 3 площадки или соцсети должны остаться.";
+  f.name.value = a.name; f.name.disabled = lock; f.bio.value = a.bio || "";
+  LINKS.forEach(([k]) => f["l_" + k].value = (a.links || {})[k] || "");
+  $("#rmAvL").hidden = !a.avatar_path; arCnt(); $("#arForm button[type=submit]").textContent = "Сохранить изменения";
+};
+window.delArt = async id => {
+  const a = myArtists.find(x => x.id === id); if (!a) return;
+  if (myArtists.length < 2) return alert("Нельзя удалить единственного артиста: у аккаунта всегда должен быть основной артист. Сначала создайте другого или измените этого.");
+  if (hasAgr(a)) return alert("Сначала отзовите соглашение V1X3N этого артиста (раздел «Договор V1X3N»).");
+  const main = myArtists[0] === a ? `\n\nОсновным артистом станет «${myArtists[1].name}».` : "";
+  if (!confirm(`Удалить артиста «${a.name}»? Уже отправленные релизы останутся, но выбрать этого артиста в новых релизах будет нельзя.` + main)) return;
+  if (a.avatar_path) await db.storage.from("releases").remove([a.avatar_path]);
+  const { error } = await db.from("artists").delete().eq("id", id); if (error) alert("Не удалось удалить: " + error.message);
+  loadArtists();
+};
 </script>
 </body>
+</html>
 </html>
