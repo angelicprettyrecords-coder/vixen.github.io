@@ -59,3 +59,22 @@ header.hero{background:radial-gradient(760px 480px at 50% -6%,#6d4ff099,transpar
 @keyframes ntb{from{transform:translateY(-8px)}to{transform:translateY(12px)}}
 @media(prefers-reduced-motion:reduce){.glass,.nt{animation:none}}
 header.hero>div.glass{position:absolute;max-width:none}
+
+/* ---- кабинет: узкая панель с иконками (артист и админ) ---- */
+.cl{grid-template-columns:68px 1fr}
+aside{width:68px;align-items:center;padding:16px 0;gap:6px}aside .brand{font-size:22px;margin-bottom:14px}
+.sb{position:relative;width:46px;height:46px;padding:0;display:grid;place-items:center;border-radius:14px;color:var(--mut);background:none;transition:.2s}
+.sb:hover{background:var(--pl);color:var(--ink)}
+.sb.a{background:#7c5cf01f;color:#a78bfa;box-shadow:0 0 0 1px #7c5cf055,0 0 26px -8px #7c5cf0}
+:root:not([data-theme=dark]) .sb.a{color:#6d4ff0}
+.sb svg{width:22px;height:22px}
+.sb .tt{display:block;position:absolute;left:58px;top:50%;transform:translate(-4px,-50%);white-space:nowrap;background:var(--card);border:1px solid var(--bd);color:var(--ink);padding:6px 11px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.15s;z-index:30;box-shadow:0 10px 30px -12px #000}
+.sb:hover .tt,.sb:focus-visible .tt{opacity:1;transform:translate(0,-50%)}
+.bg2{position:absolute;top:1px;right:-2px;min-width:18px;padding:0 5px;border-radius:99px;background:var(--p);color:#fff;font-size:10px;font-weight:700;line-height:16px;text-align:center}.bg2:empty{display:none}
+.ab{display:flex;gap:22px;align-items:flex-start}.ab>div:not(#atabs){flex:1;min-width:0}
+#atabs{flex-direction:column;flex-wrap:nowrap;gap:6px;margin:0;position:sticky;top:80px;flex:none}
+@media(max-width:800px){aside{width:auto;flex-direction:row;overflow-x:auto;padding:8px;gap:4px;height:auto;position:static}aside .brand{margin:0 8px 0 4px}#cHome{margin:0 0 0 auto!important}.sb .tt{display:none}.ab{flex-direction:column}#atabs{flex-direction:row;overflow-x:auto;position:static;max-width:100%}}
+#atabs .sb{border:0;border-radius:14px;background:none;padding:0;color:var(--mut)}
+#atabs .sb:hover{background:var(--pl);color:var(--ink)}
+#atabs .sb.a{background:#7c5cf01f;color:#a78bfa;box-shadow:0 0 0 1px #7c5cf055,0 0 26px -8px #7c5cf0}
+:root:not([data-theme=dark]) #atabs .sb.a{color:#6d4ff0}.bg2{white-space:nowrap}
