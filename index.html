@@ -155,6 +155,8 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 .hol{margin-top:12px;max-height:none}.hol .txt{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;padding:22px}.hol .soon{font-size:clamp(28px,5vw,48px)}
 .hbtn{padding:26px 14px;border-radius:20px;background:var(--pl);color:var(--ink);font-weight:600;font-size:17px;border:1px solid var(--bd)}.hbtn span{display:block;font-size:34px;margin-bottom:6px}
 </style>
+<link rel="stylesheet" href="airy.css">
+<script src="airy.js"></script>
 <link rel="stylesheet" href="halloween.css">
 <script src="halloween.js"></script>
 </head>
@@ -163,7 +165,7 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 <nav>
   <a href="#top" class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b></a>
   <div class="links">
-    <a href="about.html">О лейбле</a><a href="about.html#catalog">Каталог</a><a href="rules.html">Правила</a><a href="#why">Преимущества</a>
+    <a href="about.html">О лейбле</a><a href="about.html#catalog">Каталог</a><a href="rules.html">Правила</a><a href="#how">Как это работает</a>
     <button class="btn btn-o sm" id="themeBtn" aria-label="Сменить тему">☀️</button>
     <button class="btn btn-o sm" id="loginBtn">Войти</button>
     <button class="btn btn-y sm" data-apply>Подать заявку</button>
@@ -171,46 +173,41 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 </nav>
 
 <header class="hero" id="top">
-  <div class="blob b1"></div><div class="blob b2"></div>
-  <div>
+  <div class="blob b1"></div>
+  <div class="hc">
     <span class="tag">● Приём заявок открыт</span>
-    <h1>Твой звук <em>услышат</em> <u>все</u></h1>
-    <p>Независимый музыкальный лейбл. Помогаем артистам выпускать музыку, расти и находить свою аудиторию.</p>
-    <div class="cta">
-      <button class="btn btn-y" data-apply>Подать заявку →</button>
-      <a href="#about" class="btn btn-o">Узнать больше</a>
-    </div>
+    <h1>Музыка, которую <em>услышат</em></h1>
+    <p>Независимый лейбл для артистов: выпускаем релизы, продвигаем и доставляем музыку на площадки.</p>
+    <div class="cta"><button class="btn btn-y" data-apply>Подать заявку →</button><a href="#how" class="btn btn-o">Как это работает</a></div>
+    <div class="chips"><span>🎧 Выпуск</span><span>🚀 Продвижение</span><span>🌐 Дистрибуция</span></div>
   </div>
 </header>
+<div class="marq" hidden><div id="mq"></div></div>
 
-<div class="marq"><div id="mq"></div></div>
+<section id="how">
+  <h2 class="rv">Как это работает</h2><p class="sub rv">Три шага от заявки до релиза.</p>
+  <div class="grid">
+    <div class="card rv"><div class="ic">1</div><h3>Подаёте заявку</h3><p>Расскажите о себе, своей музыке и оставьте ссылки на площадки.</p></div>
+    <div class="card rv"><div class="ic">2</div><h3>Получаете доступ</h3><p>После одобрения лейбл создаёт кабинет и выдаёт логин и пароль.</p></div>
+    <div class="card rv"><div class="ic">3</div><h3>Выпускаете музыку</h3><p>Отправляйте синглы и альбомы и следите за статусом в кабинете.</p></div>
+  </div>
+</section>
 
 <section id="about">
-  <h2 class="rv">Музыка — <span style="color:var(--p)">наша работа</span></h2>
-  <p class="sub rv">Мы берём на себя всё лишнее, чтобы вы занимались творчеством.</p>
+  <h2 class="rv">Всё для вашей музыки</h2><p class="sub rv">Мы берём на себя лишнее, чтобы вы занимались творчеством.</p>
   <div class="grid">
-    <div class="card rv"><div class="ic">🎧</div><h3>Релизы</h3><p>Дистрибуция на все крупные площадки и аккуратная подготовка каждого релиза.</p></div>
-    <div class="card rv"><div class="ic">🚀</div><h3>Продвижение</h3><p>Плейлисты, соцсети, работа с медиа и стратегия роста под вашего артиста.</p></div>
-    <div class="card rv"><div class="ic">🤝</div><h3>Поддержка</h3><p>Личный менеджер, честные условия и прозрачная отчётность.</p></div>
+    <div class="card rv"><div class="ic">🎧</div><h3>Релизы</h3><p>Аккуратная подготовка и дистрибуция на крупные площадки.</p></div>
+    <div class="card rv"><div class="ic">🚀</div><h3>Продвижение</h3><p>Стратегия роста, плейлисты, соцсети и работа с медиа.</p></div>
+    <div class="card rv"><div class="ic">🤝</div><h3>Поддержка</h3><p>Личный менеджер, честные условия и быстрые ответы.</p></div>
   </div>
 </section>
 
-<section id="why">
-  <div class="stats rv">
-    <div><b>50+</b><p>релизов</p></div>
-    <div><b>20+</b><p>артистов</p></div>
-    <div><b>1M+</b><p>прослушиваний</p></div>
-    <div><b>100%</b><p>прав у артиста</p></div>
-  </div>
-</section>
-
-<div class="band rv">
-  <h2>Готов зазвучать?</h2>
-  <p>Расскажи о себе и своей музыке — мы внимательно прочитаем каждую заявку.</p>
+<section class="cta2">
+  <h2 class="rv">Готов зазвучать?</h2><p class="sub rv" style="margin:0 auto 26px">Расскажи о себе и своей музыке: мы внимательно прочитаем каждую заявку.</p>
   <button class="btn btn-y" data-apply>Подать заявку →</button>
-</div>
+</section>
 
-<footer><a href="about.html" style="color:var(--p);margin:0 8px">О лейбле</a>·<a href="rules.html" style="color:var(--p);margin:0 8px">Правила</a>·<a href="mailto:vixenmusicgroup@ro.ru" style="color:var(--p);margin:0 8px">vixenmusicgroup@ro.ru</a><br>© <span id="yr"></span> VIXEN MUSIC GROUP. Все права защищены.</footer>
+<footer><a href="about.html" style="color:var(--p);margin:0 8px">О лейбле</a>·<a href="about.html#catalog" style="color:var(--p);margin:0 8px">Каталог</a>·<a href="rules.html" style="color:var(--p);margin:0 8px">Правила</a>·<a href="mailto:vixenmusicgroup@ro.ru" style="color:var(--p);margin:0 8px">vixenmusicgroup@ro.ru</a><br>© <span id="yr"></span> VIXEN MUSIC GROUP. Все права защищены.</footer>
 
 <!-- Заявка -->
 <div class="ov" id="applyOv"><div class="md">
