@@ -159,7 +159,7 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 .info{position:relative;display:inline-grid;place-items:center;width:22px;height:22px;margin-left:10px;border-radius:50%;background:#e0f2fe;color:#0369a1;font:italic 700 13px Georgia,serif;cursor:help;vertical-align:middle;outline:0}
 [data-theme=dark] .info,[data-season=halloween] .info{background:#082f49;color:#7dd3fc}
 .info .tip{position:absolute;left:50%;top:135%;transform:translateX(-50%);width:max-content;max-width:260px;background:var(--card);border:1px solid var(--bd);color:var(--ink);padding:8px 12px;border-radius:10px;font:500 13px Inter,sans-serif;line-height:1.4;text-align:left;opacity:0;pointer-events:none;transition:.15s;z-index:40;box-shadow:0 12px 30px -12px #000}
-.info:hover .tip,.info:focus .tip{opacity:1}.acts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 18px}
+.info:hover .tip,.info:focus .tip{opacity:1}.info.l{margin-left:-4px}.info.l .tip{left:auto;right:-6px;transform:none}.acts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 18px}
 </style>
 <link rel="stylesheet" href="airy.css">
 <script src="airy.js"></script>
@@ -278,7 +278,7 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
     <button class="sb" id="cHome" style="margin-top:auto" aria-label="На сайт"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></svg><span class="tt">На сайт</span></button>
     <button class="sb" id="cLogout" aria-label="Выйти"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg><span class="tt">Выйти</span></button></aside>
   <main class="cm">
-    <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!<span class="info" id="inf" tabindex="0" hidden aria-label="Информация о статусе">i<span class="tip">Ваш релиз проходит финальную стадию модерации.</span></span></h2>
+    <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!</h2>
       <div class="st2" id="st"></div>
       <div class="acts"><button class="btn btn-y sm" id="addRel">+ Добавить релиз</button><button class="btn btn-o sm" id="hG">🎵 Добавить на Genius при выходе</button><button class="btn btn-o sm" id="hB">🔗 Сделать BandLink</button></div>
       <div id="svList"></div>
@@ -532,10 +532,9 @@ async function loadMine() {
   mineData = data; const c = s => data.filter(r => r.status === s).length, l = data[0];
   $("#st").innerHTML = [["Всего релизов", data.length], ["На модерации", c("На модерации")], ["В процессе", c("В процессе")], ["Принято", c("Принято")], ["Доставлено", c("Доставлено")]].map(([n, v]) => `<div class="sc"><b>${v}</b><span>${n}</span></div>`).join("") +
     `<div class="sc w"><span>Последний релиз</span><b>${l ? esc(l.title) + " · " + esc(l.status) : "Пока нет — отгрузите первый!"}</b></div>`;
-  const row = r => `<div class="rl"><div style="flex:1"><b>${esc(r.title)}${r.data.version ? " " + esc(r.data.version) : ""}</b><br><small style="color:var(--mut)">${esc(r.data.artist)} · ${new Date(r.created_at).toLocaleDateString("ru-RU")}${r.data.type === "album" ? " · Альбом, треков: " + r.data.tracks.length : ""}</small>${r.status === "Отклонено" ? `<div class="rj"><b>Причина отклонения:</b> ${esc(r.reject_reason || "не указана")}</div>` : ""}</div><span class="bd s-${esc(r.status)}">${esc(r.status)}</span>${r.status === "Отклонено" && r.data.type !== "album" ? `<button class="btn btn-y sm" onclick="fixRel('${r.id}')">Исправить и отправить снова</button>` : ""}${r.status === "Доставлено" ? `<button class="btn btn-o sm" onclick="takedown('${r.id}')">Запросить снятие</button>` : ""}<button class="btn btn-o sm" onclick="delRel('${r.id}')">Удалить</button></div>`;
+  const row = r => `<div class="rl"><div style="flex:1"><b>${esc(r.title)}${r.data.version ? " " + esc(r.data.version) : ""}</b><br><small style="color:var(--mut)">${esc(r.data.artist)} · ${new Date(r.created_at).toLocaleDateString("ru-RU")}${r.data.type === "album" ? " · Альбом, треков: " + r.data.tracks.length : ""}</small>${r.status === "Отклонено" ? `<div class="rj"><b>Причина отклонения:</b> ${esc(r.reject_reason || "не указана")}</div>` : ""}</div><span class="bd s-${esc(r.status)}">${esc(r.status)}</span>${r.status === "В процессе" ? '<span class="info l" tabindex="0" aria-label="Информация о статусе">i<span class="tip">Ваш релиз проходит финальную стадию модерации.</span></span>' : ""}${r.status === "Отклонено" && r.data.type !== "album" ? `<button class="btn btn-y sm" onclick="fixRel('${r.id}')">Исправить и отправить снова</button>` : ""}${r.status === "Доставлено" ? `<button class="btn btn-o sm" onclick="takedown('${r.id}')">Запросить снятие</button>` : ""}<button class="btn btn-o sm" onclick="delRel('${r.id}')">Удалить</button></div>`;
   const G = [["На модерации", "⏳ На модерации"], ["В процессе", "🔵 В процессе"], ["Принято", "✅ Приняты"], ["Доставлено", "🚀 Доставлены"], ["Отклонено", "❌ Отклонены"]];
   $("#mine").innerHTML = data.length ? G.map(([st, t]) => { const a = data.filter(r => r.status === st); return a.length ? `<div class="tb"><h4>${t}<span>${a.length}</span></h4>${a.map(row).join("")}</div>` : ""; }).join("") : '<p class="emp">Релизов пока нет. Нажмите «Добавить релиз», чтобы отправить первый.</p>';
-  $("#inf").hidden = !c("В процессе");
 }
 
 // ================= АДМИН: релизы и вкладки =================
