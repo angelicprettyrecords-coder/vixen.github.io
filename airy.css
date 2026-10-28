@@ -1,0 +1,37 @@
+/* «Воздушный» дизайн — единый стиль сайта. Вернуть прежний вид: удалите из <head> строки с airy.css и airy.js */
+:root{--bg:#fbfaff;--card:#fff;--in:#f7f5ff;--bd:#ebe7f7;--pl:#f3f0ff;--mut:#6f6a86;--nav:rgba(251,250,255,.72);--p:#7c5cf0;--p2:#a78bfa;--r:20px}
+:root[data-theme=dark]{--bg:#07080f;--card:#0f111b;--in:#0b0d16;--bd:#1c2030;--pl:#141728;--mut:#8d93ab;--nav:rgba(7,8,15,.65)}
+body{font-family:Inter,system-ui,sans-serif}
+h1,h2,h3{letter-spacing:-.03em}
+nav{background:transparent;backdrop-filter:none;border-bottom:1px solid transparent;padding:16px 5vw;transition:.3s}
+nav.sc{background:var(--nav);backdrop-filter:blur(16px);border-bottom-color:var(--bd)}
+.btn{border-radius:14px;padding:13px 24px;font-weight:600}.sm{padding:9px 18px}.btn-o{background:transparent}.btn-y{box-shadow:0 8px 28px -10px #facc1599}
+/* главная */
+header.hero,header.ph{background:radial-gradient(900px 520px at 50% -12%,#7c5cf044,transparent 70%),var(--bg)}
+.hero{min-height:88vh}.hc h1{font-size:clamp(40px,7vw,88px);font-weight:800;letter-spacing:-.045em;line-height:1.04}
+h1 u{background:none}h1 em{background:linear-gradient(120deg,#c4b5fd,#7c5cf0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);max-width:520px}.tag{background:transparent}
+.blob{opacity:.2;filter:blur(100px)}.b2{display:none}
+.chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+.chips span{padding:8px 16px;border:1px solid var(--bd);border-radius:99px;background:var(--card);font-size:14px;color:var(--mut)}
+section{padding:64px 6vw}section h2{font-size:clamp(26px,3.6vw,40px)}.sub{color:var(--mut)}
+.card,.card:nth-child(2){background:var(--card);color:var(--ink);border:1px solid var(--bd);border-radius:var(--r);padding:26px}.card:nth-child(2) p{color:var(--mut)}.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px #7c5cf0aa}
+.card .ic{background:var(--pl);color:var(--p);border-radius:12px;font-weight:700}
+.cta2{text-align:center;max-width:720px;margin:auto;padding:80px 6vw 90px;background:radial-gradient(420px 200px at 50% 40%,#7c5cf033,transparent)}
+.marq,.band{display:none}
+#nts{position:absolute;inset:0;overflow:hidden;pointer-events:none}.nt{position:absolute;top:-30px;color:#8b7cf6;opacity:.3;animation:ntf linear infinite}
+@keyframes ntf{to{transform:translateY(110vh) rotate(25deg)}}@media(prefers-reduced-motion:reduce){.nt{animation:none}}
+/* кабинет: компактный */
+.cl{grid-template-columns:210px 1fr}aside{padding:18px 12px;gap:3px}aside .brand{font-size:13px;margin-bottom:14px}.sb{padding:10px 14px;font-size:14px;border-radius:12px}
+.cm{padding:26px 4vw}.cm h2{font-size:24px;letter-spacing:-.02em}.cm h3{font-size:16px}.cm .sub{margin-bottom:18px;font-size:14px}
+.st2{gap:12px;margin:16px 0 24px;grid-template-columns:repeat(4,1fr)}@media(max-width:700px){.st2{grid-template-columns:repeat(2,1fr)}}
+.sc{padding:16px 18px;border-radius:16px}.sc b{font-size:24px}.sc span{font-size:13px}
+.sc.w{background:linear-gradient(135deg,#7c5cf033,var(--card));color:var(--ink)}.sc.w b{font-size:16px}.sc.w span{color:var(--mut)}
+.rl{padding:10px 14px;border-radius:14px;margin-bottom:8px;gap:12px}.rl .btn.sm{padding:7px 14px;font-size:13px}.rl img,.ph{width:46px;height:46px}
+.tb{margin-bottom:20px}.tb h4{font-size:14px}.bd{padding:4px 12px;font-size:12px}
+#relForm,#albForm,#tkForm,#agForm,#catForm{padding:20px;border-radius:18px}.md{padding:26px;border-radius:22px}
+.cm input:not([type=checkbox]):not([type=radio]),.cm select,.cm textarea,.md input:not([type=checkbox]):not([type=radio]),.md select,.md textarea{padding:10px 14px;border-radius:12px}
+.cm label,.md label{margin:10px 0 4px;font-size:12.5px}.hint{font-size:12px}
+#relForm h4,#albForm h4{margin:22px 0 2px;font-size:14px}.trk{padding:16px;border-radius:16px}
+.ah{padding:12px 4vw}.ab{padding:22px 4vw}.agh{padding:24px;border-radius:22px}.stp{padding:14px}.agt{padding:20px}
+@media(max-width:800px){.cl{grid-template-columns:1fr}}
