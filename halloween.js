@@ -10,9 +10,9 @@
   document.documentElement.dataset.season = "halloween";
   var f = document.createElement("link"); f.rel = "stylesheet"; f.href = "https://fonts.googleapis.com/css2?family=Creepster&display=swap"; document.head.appendChild(f);
   document.addEventListener("DOMContentLoaded", function () {
-    var bar = document.createElement("div"); bar.id = "hwbar"; bar.textContent = "🎃 Happy Halloween от Vixen Music Group 🦇"; document.body.prepend(bar);
+    var bar = document.createElement("div"); bar.id = "hwbar"; bar.textContent = "🎃 Happy Halloween"; document.body.prepend(bar);
     var box = document.createElement("div"); box.id = "hw", E = ["🎃", "👻", "🦇", "🕷️", "💀", "🕸️"];
-    for (var i = 0; i < 16; i++) { var s = document.createElement("span"); s.textContent = E[i % E.length];
+    for (var i = 0; i < 8; i++) { var s = document.createElement("span"); s.textContent = E[i % E.length];
       s.style.cssText = "left:" + ((i * 6.3 + Math.random() * 4) % 96) + "%;font-size:" + (18 + Math.random() * 26) + "px;animation-duration:" + (14 + Math.random() * 16) + "s;animation-delay:-" + (Math.random() * 20) + "s"; box.appendChild(s); }
     box.insertAdjacentHTML("beforeend", '<div id="hws"><i></i><b>🕷️</b></div>'); document.body.appendChild(box);
   });
