@@ -1,23 +1,20 @@
-/* Хэллоуин-тема: действует только когда у <html> есть data-season="halloween" */
-:root[data-season=halloween]{color-scheme:dark;--bg:#07030c;--card:#12091c;--in:#0d0614;--bd:#34204f;--nav:rgba(7,3,12,.82);--p:#a855f7;--p2:#c084fc;--pl:#1c0f2e;--y:#ff7a18;--ink:#fbf1e6;--mut:#b9a5cc}
-[data-season=halloween] body{background:radial-gradient(900px 500px at 50% 110%,#ff7a1826,transparent 60%) fixed,var(--bg)}
-[data-season=halloween] ::selection{background:#ff7a18;color:#12031f}
+/* Хэллоуин в «воздушном» стиле. Работает только когда у <html> есть data-season="halloween" */
+:root[data-season=halloween]{color-scheme:dark;--bg:#09050f;--card:#120a1b;--in:#0e0716;--bd:#2c1b44;--nav:rgba(9,5,15,.65);--p:#a78bfa;--p2:#c4b5fd;--pl:#1a1029;--y:#ff8a2a;--ink:#f8efe6;--mut:#b2a3c6}
+[data-season=halloween] header.hero,[data-season=halloween] header.ph{background:radial-gradient(900px 520px at 50% -12%,#a78bfa44,transparent 70%),radial-gradient(760px 240px at 50% 70%,#ff8a2a33,transparent 70%),var(--bg)}
 [data-season=halloween] #themeBtn{display:none}
-[data-season=halloween] nav{top:28px}
-[data-season=halloween] .brand,[data-season=halloween] .logo{font-family:Creepster,Unbounded,sans-serif;letter-spacing:.08em;text-shadow:0 0 18px #ff7a1899;animation:hwfl 6s infinite}
-[data-season=halloween] h1 em{background:linear-gradient(120deg,#ff7a18,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}
-[data-season=halloween] .btn-y{background:linear-gradient(135deg,#ff7a18,#ff9f43);box-shadow:0 10px 34px -8px #ff7a18bb}
-[data-season=halloween] .hero:after,[data-season=halloween] .ph:after{content:"";position:absolute;left:0;right:0;bottom:0;height:35%;background:linear-gradient(transparent,#ff7a1822);pointer-events:none}
-[data-season=halloween] .marq{background:linear-gradient(90deg,#ff7a18,#a855f7);color:#12031f}[data-season=halloween] .marq span{color:#12031f}
-[data-season=halloween] .band,[data-season=halloween] .agh{background:linear-gradient(135deg,#3b0f5c,#12031f)}
-[data-season=halloween] .tag{border-color:#ff7a1866;color:#ff9f43}
-[data-season=halloween] .card:hover,[data-season=halloween] .cat:hover{box-shadow:0 24px 50px -22px #ff7a1888}
-#hwbar{position:fixed;top:0;left:0;right:0;height:28px;z-index:31;background:linear-gradient(90deg,#ff7a18,#a855f7);color:#12031f;font-size:13px;font-weight:700;text-align:center;line-height:28px;letter-spacing:.04em}
+[data-season=halloween] ::selection{background:#ff8a2a;color:#12031f}
+[data-season=halloween] .brand,[data-season=halloween] .logo{font-family:Creepster,Unbounded,sans-serif;letter-spacing:.08em;text-shadow:0 0 16px #ff8a2a88}
+[data-season=halloween] h1 em{background:linear-gradient(120deg,#ff8a2a,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-season=halloween] .btn-y{background:linear-gradient(135deg,#ff8a2a,#ffa552);box-shadow:0 8px 28px -10px #ff8a2acc}
+[data-season=halloween] .tag{border-color:#ff8a2a55;color:#ffa552}
+[data-season=halloween] .card:hover{box-shadow:0 18px 40px -24px #ff8a2a99}
+[data-season=halloween] .cta2{background:radial-gradient(420px 200px at 50% 40%,#ff8a2a2e,transparent)}
+[data-season=halloween] .agh{background:radial-gradient(500px 200px at 80% 0,#ff8a2a33,transparent),linear-gradient(135deg,#2a1346,#12031f)}
+#hwbar{position:fixed;left:14px;bottom:14px;z-index:36;padding:6px 14px;border-radius:99px;background:#ff8a2a1f;border:1px solid #ff8a2a66;color:#ffb27a;font-size:12px;font-weight:600;backdrop-filter:blur(8px)}
 #hw{position:fixed;inset:0;z-index:35;pointer-events:none;overflow:hidden}
-#hw span{position:absolute;bottom:-60px;opacity:.28;animation:hwf linear infinite}
-@keyframes hwf{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(30px,-55vh) rotate(12deg)}100%{transform:translate(-20px,-120vh) rotate(-10deg)}}
-#hws{position:absolute;top:28px;right:7vw;display:flex;flex-direction:column;align-items:center;transform-origin:top center;animation:hwsw 4s ease-in-out infinite}
-#hws i{width:2px;height:120px;background:#ffffff66}#hws b{font-size:32px;margin-top:-6px;font-weight:400}
-@keyframes hwsw{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-@keyframes hwfl{0%,91%,100%{opacity:1}93%{opacity:.55}95%{opacity:1}97%{opacity:.7}}
-@media(prefers-reduced-motion:reduce){#hw span,#hws,[data-season=halloween] .brand,[data-season=halloween] .logo{animation:none!important}}
+#hw span{position:absolute;bottom:-60px;opacity:.16;animation:hwf linear infinite}
+@keyframes hwf{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(24px,-55vh) rotate(10deg)}100%{transform:translate(-16px,-120vh) rotate(-8deg)}}
+#hws{position:absolute;top:0;right:8vw;display:flex;flex-direction:column;align-items:center;transform-origin:top center;animation:hwsw 5s ease-in-out infinite;opacity:.85}
+#hws i{width:1px;height:90px;background:#ffffff55}#hws b{font-size:24px;margin-top:-4px;font-weight:400}
+@keyframes hwsw{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@media(prefers-reduced-motion:reduce){#hw span,#hws{animation:none!important}}
