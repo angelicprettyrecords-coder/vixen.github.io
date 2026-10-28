@@ -78,3 +78,11 @@ aside{width:68px;align-items:center;padding:16px 0;gap:6px}aside .brand{font-siz
 #atabs .sb:hover{background:var(--pl);color:var(--ink)}
 #atabs .sb.a{background:#7c5cf01f;color:#a78bfa;box-shadow:0 0 0 1px #7c5cf055,0 0 26px -8px #7c5cf0}
 :root:not([data-theme=dark]) #atabs .sb.a{color:#6d4ff0}.bg2{white-space:nowrap}
+
+/* ---- «Начало» компактнее ---- */
+#vHome h2{margin-bottom:10px}
+.st2{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 14px}
+.st2 .sc{flex:1 1 110px;display:flex;align-items:baseline;gap:10px;padding:10px 14px;border-radius:14px}
+.st2 .sc b{font-size:20px;display:inline}.st2 .sc span{font-size:12.5px}
+.st2 .sc.w{flex-basis:100%;padding:8px 14px}.st2 .sc.w b{font-size:14px}
+#vHome .tb{margin-bottom:14px}#vHome .tb h4{margin-bottom:8px}
