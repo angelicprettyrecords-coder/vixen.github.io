@@ -154,6 +154,7 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 .stg h3{font-family:Unbounded;font-size:17px;margin-bottom:4px}.stg .seg{margin:12px 0 8px}
 .hol{margin-top:12px;max-height:none}.hol .txt{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;padding:22px}.hol .soon{font-size:clamp(28px,5vw,48px)}
 .hbtn{padding:26px 14px;border-radius:20px;background:var(--pl);color:var(--ink);font-weight:600;font-size:17px;border:1px solid var(--bd)}.hbtn span{display:block;font-size:34px;margin-bottom:6px}
+.sb svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}.sb .tt{display:none}
 </style>
 <link rel="stylesheet" href="airy.css">
 <script src="airy.js"></script>
@@ -246,7 +247,7 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 <div class="adm" id="adm">
   <div class="ah"><span class="brand"><i>VIXEN</i> MUSIC GROUP<b>.</b> · Админ</span>
     <div style="display:flex;gap:8px"><button class="btn btn-o sm" id="aSet">Настройки</button><button class="btn btn-o sm" id="aHome">На сайт</button><button class="btn btn-o sm" id="reload">Обновить</button><button class="btn btn-p sm" id="logout">Выйти</button></div></div>
-  <div class="ab"><div class="seg" id="atabs"><button class="a" data-t="Apps">Заявки на вступление <span id="cnt"></span></button><button data-t="Rels">Релизы <span id="rcnt"></span></button><button data-t="Tix">Поддержка <span id="tcnt"></span></button><button data-t="Svc">Genius / BandLink <span id="scnt"></span></button><button data-t="Cat">Каталог</button><button data-t="Art">Артисты</button><button data-t="Agr">Договоры V1X3N</button></div>
+  <div class="ab"><div class="seg" id="atabs"><button class="sb a" data-t="Apps" aria-label="Заявки на вступление"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M16 11h6"/></svg><span class="tt">Заявки на вступление</span><span class="bg2" id="cnt"></span></button><button class="sb" data-t="Rels" aria-label="Релизы"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg><span class="tt">Релизы</span><span class="bg2" id="rcnt"></span></button><button class="sb" data-t="Tix" aria-label="Поддержка"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span class="tt">Поддержка</span><span class="bg2" id="tcnt"></span></button><button class="sb" data-t="Svc" aria-label="Genius / BandLink"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg><span class="tt">Genius / BandLink</span><span class="bg2" id="scnt"></span></button><button class="sb" data-t="Cat" aria-label="Каталог"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v16M9 4v16"/><path d="m14 5 5 14"/></svg><span class="tt">Каталог</span></button><button class="sb" data-t="Art" aria-label="Артисты"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v4"/></svg><span class="tt">Артисты</span></button><button class="sb" data-t="Agr" aria-label="Договоры V1X3N"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg><span class="tt">Договоры V1X3N</span></button></div>
   <div id="paneApps"><div id="list"></div></div><div id="paneRels" hidden><div id="rlist"></div></div><div id="paneTix" hidden><div id="tlist"></div></div><div id="paneSvc" hidden><div id="slist"></div></div>
   <div id="paneAgr" hidden><div id="aglist"></div></div>
   <div id="paneArt" hidden><div id="alist"></div></div>
@@ -260,17 +261,17 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 
 <!-- Кабинет артиста -->
 <div class="adm" id="cab"><div class="cl">
-  <aside><span class="brand"><i>VIXEN</i> MUSIC<b>.</b></span>
-    <button class="sb a" data-v="Home">🏠 Начало</button>
-    <button class="sb" data-v="New">⬆️ Отгрузить релиз</button>
-    <button class="sb" data-v="Art">🎤 Мои артисты</button>
-    <button class="sb" data-v="Agr">📜 Договор V1X3N</button>
-    <button class="sb" data-v="Excl">💎 Эксклюзивный договор</button>
-    <button class="sb" data-v="Set">⚙️ Настройки</button>
-    <button class="sb" data-v="Pwd">🔒 Пароль</button>
-    <button class="sb" data-v="Sup">💬 Поддержка</button>
-    <button class="sb" id="cHome" style="margin-top:auto">🌐 На сайт</button>
-    <button class="sb" id="cLogout">Выйти</button></aside>
+  <aside><span class="brand"><i>V</i><b>.</b></span>
+    <button class="sb a" data-v="Home" aria-label="Начало"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span class="tt">Начало</span></button>
+    <button class="sb" data-v="New" aria-label="Отгрузить релиз"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><span class="tt">Отгрузить релиз</span></button>
+    <button class="sb" data-v="Art" aria-label="Мои артисты"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v4"/></svg><span class="tt">Мои артисты</span></button>
+    <button class="sb" data-v="Agr" aria-label="Договор V1X3N"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg><span class="tt">Договор V1X3N</span></button>
+    <button class="sb" data-v="Excl" aria-label="Эксклюзивный договор"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/><path d="m8 3 4 6 4-6"/></svg><span class="tt">Эксклюзивный договор</span></button>
+    <button class="sb" data-v="Set" aria-label="Настройки"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span class="tt">Настройки</span></button>
+    <button class="sb" data-v="Pwd" aria-label="Пароль"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span class="tt">Пароль</span></button>
+    <button class="sb" data-v="Sup" aria-label="Поддержка"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span class="tt">Поддержка</span></button>
+    <button class="sb" id="cHome" style="margin-top:auto" aria-label="На сайт"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></svg><span class="tt">На сайт</span></button>
+    <button class="sb" id="cLogout" aria-label="Выйти"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg><span class="tt">Выйти</span></button></aside>
   <main class="cm">
     <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!</h2>
       <div class="st2" id="st"></div>
@@ -383,7 +384,7 @@ async function enter(user) {
 async function loadApps() {
   const { data, error } = await db.from("applications").select("*").order("created_at", { ascending:false });
   if (error) { $("#list").innerHTML = '<p class="err">Ошибка загрузки</p>'; return; }
-  $("#cnt").textContent = "(" + data.length + ")";
+  $("#cnt").textContent = (data.length) || "";
   const names = { spotify:"Spotify", apple:"Apple Music", tiktok:"TikTok", youtube:"YouTube", soundcloud:"SoundCloud", yandex:"Яндекс Музыка", vk:"VK Музыка", other:"Другое" };
   $("#list").innerHTML = data.length ? data.map(a => `
     <div class="ap st-${esc(a.status)}">
@@ -536,7 +537,7 @@ const YN = x => x ? "Да" : "Нет";
 async function loadRels() {
   const { data, error } = await db.from("releases").select("*").order("created_at", { ascending: false });
   if (error) { $("#rlist").innerHTML = '<p class="err">Ошибка загрузки</p>'; return; }
-  $("#rcnt").textContent = "(" + data.length + ")"; RELS = data;
+  $("#rcnt").textContent = (data.length) || ""; RELS = data;
   const S = db.storage.from("releases");
   const sg = async p => { const x = await S.createSignedUrl(p, 3600); return x.data && x.data.signedUrl; };
   const urls = await Promise.all(data.map(async r => { const al = r.data.type === "album"; return [await sg(r.cover_path), al ? null : await sg(r.audio_path), al ? await Promise.all(r.data.tracks.map(t => sg(t.audioPath))) : null]; }));
@@ -580,7 +581,7 @@ async function loadTix(el, admin) {
   if (el.contains(document.activeElement) && document.activeElement.tagName === "TEXTAREA") return;
   const [t, m] = await Promise.all([db.from("tickets").select("*").order("created_at", { ascending: false }), db.from("ticket_messages").select("*").order("created_at")]);
   if (t.error || m.error) { console.error(t.error || m.error); return; }
-  if (admin) $("#tcnt").textContent = "(" + t.data.filter(x => x.status === "Открыто").length + " откр.)";
+  if (admin) $("#tcnt").textContent = (t.data.filter(x => x.status === "Открыто").length) || "";
   el.innerHTML = t.data.length ? t.data.map(x => `<details class="tk" data-id="${x.id}"${openT.has(x.id) ? " open" : ""}><summary><b>№${x.num}</b> · ${esc(x.topic)} — ${esc(x.subject)}${admin ? ` <small>(${esc(x.login)})</small>` : ""} <span class="bd s-${esc(x.status)}">${esc(x.status)}</span></summary>
     <div class="th">${m.data.filter(y => y.ticket_id === x.id).map(y => `<div class="mg${y.is_admin ? " ad2" : ""}"><small>${y.is_admin ? "Поддержка" : "Артист"} · ${new Date(y.created_at).toLocaleString("ru-RU")}</small><p>${esc(y.text)}</p></div>`).join("")}</div>
     ${admin ? `<select onchange="setTk('${x.id}',this.value)">${["Открыто", "Закрыто"].map(s => `<option${s === x.status ? " selected" : ""}>${s}</option>`).join("")}</select>` : ""}
@@ -765,7 +766,7 @@ setInterval(() => $("#cab").classList.contains("show") && loadSvc(), 30000);
 // ---- админ: заявки Genius / BandLink ----
 async function loadSvcAdmin() {
   const { data, error } = await db.from("services").select("*").order("created_at", { ascending: false }); if (error) return;
-  $("#scnt").textContent = "(" + data.filter(x => x.status === "Новая").length + " нов.)";
+  $("#scnt").textContent = (data.filter(x => x.status === "Новая").length) || "";
   $("#slist").innerHTML = data.length ? data.map(x => { const d = x.data, pre = t => `<p style="white-space:pre-wrap;color:var(--mut)">${esc(t)}</p>`;
     const body = x.type !== "genius" ? "" : d.kind === "album" ? d.tracks.map((t, i) => `<details><summary>${i + 1}. ${esc(t.title)}</summary>${pre(t.lyrics)}</details>`).join("") : `<details><summary>Текст песни</summary>${pre(d.lyrics)}</details>`;
     return `<div class="ad"><div><h4 style="font-family:Unbounded">${x.type === "genius" ? "🎵 Genius" : "🔗 BandLink"} · ${esc(d.title)}</h4><small>${esc(x.login)} · ${svInfo(x)} · ${new Date(x.created_at).toLocaleString("ru-RU")}</small>${body}<br>
