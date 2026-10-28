@@ -18,3 +18,4 @@
 #hws i{width:1px;height:90px;background:#ffffff55}#hws b{font-size:24px;margin-top:-4px;font-weight:400}
 @keyframes hwsw{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
 @media(prefers-reduced-motion:reduce){#hw span,#hws{animation:none!important}}
+[data-season=halloween] header.ph{background:radial-gradient(900px 520px at 50% -12%,#a78bfa44,transparent 70%),radial-gradient(600px 150px at 50% 45%,#ff8a2a2a,transparent 70%),var(--bg)}
