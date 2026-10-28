@@ -155,6 +155,11 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 .hol{margin-top:12px;max-height:none}.hol .txt{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;padding:22px}.hol .soon{font-size:clamp(28px,5vw,48px)}
 .hbtn{padding:26px 14px;border-radius:20px;background:var(--pl);color:var(--ink);font-weight:600;font-size:17px;border:1px solid var(--bd)}.hbtn span{display:block;font-size:34px;margin-bottom:6px}
 .sb svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}.sb .tt{display:none}
+.bd.s-В{background:#e0f2fe;color:#0369a1}[data-theme=dark] .bd.s-В,[data-season=halloween] .bd.s-В{background:#082f49;color:#7dd3fc}
+.info{position:relative;display:inline-grid;place-items:center;width:22px;height:22px;margin-left:10px;border-radius:50%;background:#e0f2fe;color:#0369a1;font:italic 700 13px Georgia,serif;cursor:help;vertical-align:middle;outline:0}
+[data-theme=dark] .info,[data-season=halloween] .info{background:#082f49;color:#7dd3fc}
+.info .tip{position:absolute;left:50%;top:135%;transform:translateX(-50%);width:max-content;max-width:260px;background:var(--card);border:1px solid var(--bd);color:var(--ink);padding:8px 12px;border-radius:10px;font:500 13px Inter,sans-serif;line-height:1.4;text-align:left;opacity:0;pointer-events:none;transition:.15s;z-index:40;box-shadow:0 12px 30px -12px #000}
+.info:hover .tip,.info:focus .tip{opacity:1}.acts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 18px}
 </style>
 <link rel="stylesheet" href="airy.css">
 <script src="airy.js"></script>
@@ -273,10 +278,10 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
     <button class="sb" id="cHome" style="margin-top:auto" aria-label="На сайт"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></svg><span class="tt">На сайт</span></button>
     <button class="sb" id="cLogout" aria-label="Выйти"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg><span class="tt">Выйти</span></button></aside>
   <main class="cm">
-    <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!</h2>
+    <div id="vHome"><h2>Добро пожаловать, <span id="uName" style="color:var(--p)"></span>!<span class="info" id="inf" tabindex="0" hidden aria-label="Информация о статусе">i<span class="tip">Ваш релиз проходит финальную стадию модерации.</span></span></h2>
       <div class="st2" id="st"></div>
-      <div class="rowb"><h3>Сервисы</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o sm" id="hG">🎵 Добавить на Genius при выходе</button><button class="btn btn-o sm" id="hB">🔗 Сделать BandLink</button></div></div><div id="svList" style="margin-bottom:32px"></div>
-      <div class="rowb"><h3>Мои релизы</h3><button class="btn btn-y sm" id="addRel">+ Добавить релиз</button></div>
+      <div class="acts"><button class="btn btn-y sm" id="addRel">+ Добавить релиз</button><button class="btn btn-o sm" id="hG">🎵 Добавить на Genius при выходе</button><button class="btn btn-o sm" id="hB">🔗 Сделать BandLink</button></div>
+      <div id="svList"></div>
       <div id="mine"></div></div>
     <div id="vNew" hidden><h2>Отгрузить релиз</h2><p class="sub">Выберите, что отправить на модерацию.</p>
       <div class="pk" id="pk"><button id="pSingle">💿 Сингл<br><small style="font-weight:400;color:var(--mut)">Одна песня</small></button><button id="pAlbum">📀 Альбом<br><small style="font-weight:400;color:var(--mut)">Несколько треков</small></button></div>
@@ -405,7 +410,7 @@ $("#reload").onclick = loadApps;
 $("#logout").onclick = async () => { await db.auth.signOut(); $("#adm").classList.remove("show"); document.body.style.overflow = ""; };
 
 // ================= КАБИНЕТ АРТИСТА =================
-const STATUSES = ["На модерации","Отклонено","Принято","Доставлено"];
+const STATUSES = ["На модерации","В процессе","Отклонено","Принято","Доставлено"];
 const GENRES = "African,Alternative,Arabic,Asian,Blues,Brazilian,Children Music,Christian & Gospel,Classical,Country,Dance,Easy Listening,Electronic,Folk,Hip Hop/Rap,Indian,Jazz,Latin,Metal,Pop,R&B/Soul,Reggae,Relaxation,Rock,Various,World Music/Regional Folklore".split(",");
 const LANGS = "Русский,English,Українська,Беларуская,Қазақша,Oʻzbekcha,Azərbaycanca,Հայերեն,ქართული,Türkçe,Español,Português,Français,Deutsch,Italiano,Polski,Nederlands,Svenska,Norsk,Dansk,Suomi,Čeština,Magyar,Română,Български,Српски,Ελληνικά,עברית,العربية,فارسی,हिन्दी,বাংলা,日本語,한국어,中文 (普通话),粵語,ไทย,Tiếng Việt,Bahasa Indonesia,Bahasa Melayu,Tagalog,Kiswahili,Без слов (инструментал)".split(",");
 const COUNTRIES = "Россия,Украина,Беларусь,Казахстан,Узбекистан,Азербайджан,Армения,Грузия,Молдова,Кыргызстан,Таджикистан,Латвия,Литва,Эстония,Польша,Германия,Франция,Великобритания,Италия,Испания,Португалия,Нидерланды,Бельгия,Швейцария,Австрия,Швеция,Норвегия,Дания,Финляндия,Чехия,Венгрия,Румыния,Болгария,Сербия,Греция,Турция,Израиль,ОАЭ,Саудовская Аравия,Египет,Марокко,Нигерия,ЮАР,США,Канада,Мексика,Бразилия,Аргентина,Чили,Колумбия,Индия,Китай,Япония,Южная Корея,Таиланд,Вьетнам,Индонезия,Австралия,Новая Зеландия,Другая".split(",");
@@ -525,10 +530,12 @@ async function loadMine() {
   const { data, error } = await db.from("releases").select("id,title,status,created_at,data,reject_reason,cover_path,audio_path").order("created_at", { ascending: false });
   if (error) { console.error(error); return; }
   mineData = data; const c = s => data.filter(r => r.status === s).length, l = data[0];
-  $("#st").innerHTML = [["Всего релизов", data.length], ["На модерации", c("На модерации")], ["Принято", c("Принято")], ["Доставлено", c("Доставлено")]].map(([n, v]) => `<div class="sc"><b>${v}</b><span>${n}</span></div>`).join("") +
+  $("#st").innerHTML = [["Всего релизов", data.length], ["На модерации", c("На модерации")], ["В процессе", c("В процессе")], ["Принято", c("Принято")], ["Доставлено", c("Доставлено")]].map(([n, v]) => `<div class="sc"><b>${v}</b><span>${n}</span></div>`).join("") +
     `<div class="sc w"><span>Последний релиз</span><b>${l ? esc(l.title) + " · " + esc(l.status) : "Пока нет — отгрузите первый!"}</b></div>`;
   const row = r => `<div class="rl"><div style="flex:1"><b>${esc(r.title)}${r.data.version ? " " + esc(r.data.version) : ""}</b><br><small style="color:var(--mut)">${esc(r.data.artist)} · ${new Date(r.created_at).toLocaleDateString("ru-RU")}${r.data.type === "album" ? " · Альбом, треков: " + r.data.tracks.length : ""}</small>${r.status === "Отклонено" ? `<div class="rj"><b>Причина отклонения:</b> ${esc(r.reject_reason || "не указана")}</div>` : ""}</div><span class="bd s-${esc(r.status)}">${esc(r.status)}</span>${r.status === "Отклонено" && r.data.type !== "album" ? `<button class="btn btn-y sm" onclick="fixRel('${r.id}')">Исправить и отправить снова</button>` : ""}${r.status === "Доставлено" ? `<button class="btn btn-o sm" onclick="takedown('${r.id}')">Запросить снятие</button>` : ""}<button class="btn btn-o sm" onclick="delRel('${r.id}')">Удалить</button></div>`;
-  $("#mine").innerHTML = [["На модерации", "⏳ На модерации"], ["Принято", "✅ Приняты"], ["Доставлено", "🚀 Доставлены"], ["Отклонено", "❌ Отклонены"]].map(([st, t]) => { const a = data.filter(r => r.status === st); return `<div class="tb"><h4>${t}<span>${a.length}</span></h4>${a.length ? a.map(row).join("") : '<p class="emp">Здесь пока пусто.</p>'}</div>`; }).join("");
+  const G = [["На модерации", "⏳ На модерации"], ["В процессе", "🔵 В процессе"], ["Принято", "✅ Приняты"], ["Доставлено", "🚀 Доставлены"], ["Отклонено", "❌ Отклонены"]];
+  $("#mine").innerHTML = data.length ? G.map(([st, t]) => { const a = data.filter(r => r.status === st); return a.length ? `<div class="tb"><h4>${t}<span>${a.length}</span></h4>${a.map(row).join("")}</div>` : ""; }).join("") : '<p class="emp">Релизов пока нет. Нажмите «Добавить релиз», чтобы отправить первый.</p>';
+  $("#inf").hidden = !c("В процессе");
 }
 
 // ================= АДМИН: релизы и вкладки =================
@@ -759,7 +766,7 @@ $("#svForm").onsubmit = async e => {
 const svInfo = x => x.type === "genius" ? (x.data.kind === "album" ? "Альбом, треков: " + x.data.tracks.length : "Сингл") : "Страница релиза";
 async function loadSvc() {
   const { data, error } = await db.from("services").select("*").order("created_at", { ascending: false }); if (error) return;
-  $("#svList").innerHTML = data.length ? data.map(x => `<div class="rl"><div style="flex:1"><b>${x.type === "genius" ? "🎵 Genius" : "🔗 BandLink"}</b> · ${esc(x.data.title)}<br><small style="color:var(--mut)">${svInfo(x)} · ${new Date(x.created_at).toLocaleDateString("ru-RU")}</small></div><span class="bd s-${esc(x.status)}">${esc(x.status)}</span></div>`).join("") : '<p class="emp">Заявок на Genius и BandLink пока нет.</p>';
+  $("#svList").innerHTML = data.length ? '<div class="tb"><h4>Заявки Genius / BandLink</h4>' + data.map(x => `<div class="rl"><div style="flex:1"><b>${x.type === "genius" ? "🎵 Genius" : "🔗 BandLink"}</b> · ${esc(x.data.title)}<br><small style="color:var(--mut)">${svInfo(x)} · ${new Date(x.created_at).toLocaleDateString("ru-RU")}</small></div><span class="bd s-${esc(x.status)}">${esc(x.status)}</span></div>`).join("") + '</div>' : "";
 }
 setInterval(() => $("#cab").classList.contains("show") && loadSvc(), 30000);
 
