@@ -160,11 +160,15 @@ label.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:16
 [data-theme=dark] .info,[data-season=halloween] .info{background:#082f49;color:#7dd3fc}
 .info .tip{position:absolute;left:50%;top:135%;transform:translateX(-50%);width:max-content;max-width:260px;background:var(--card);border:1px solid var(--bd);color:var(--ink);padding:8px 12px;border-radius:10px;font:500 13px Inter,sans-serif;line-height:1.4;text-align:left;opacity:0;pointer-events:none;transition:.15s;z-index:40;box-shadow:0 12px 30px -12px #000}
 .info:hover .tip,.info:focus .tip{opacity:1}.info.l{margin-left:-4px}.info.l .tip{left:auto;right:-6px;transform:none}.acts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 18px}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:12px}.hbtn{cursor:pointer;transition:.2s}.hbtn:hover:not(:disabled){transform:translateY(-3px);border-color:var(--p)}.hbtn.on{border-color:var(--p);box-shadow:0 0 0 1px var(--p)}.hbtn:disabled{opacity:.55;cursor:not-allowed}.hbtn em{display:block;font-style:normal;font-size:11px;color:var(--mut);margin-top:2px}
 </style>
 <link rel="stylesheet" href="airy.css">
 <script src="airy.js"></script>
 <link rel="stylesheet" href="halloween.css">
-<script src="halloween.js"></script>
+<link rel="stylesheet" href="newyear.css">
+<script src="seasons.js"></script>
+<script src="i18n.js" defer></script>
+
 </head>
 <body>
 
@@ -1024,16 +1028,22 @@ function copyTrack(src) {
 // ================= НАСТРОЙКИ =================
 const stHtml = `<h3>Тема</h3><p class="hint">Оформление сайта: светлое или тёмное.</p>
   <div class="seg"><button type="button" class="stT" data-t="light">☀️ Светлая</button><button type="button" class="stT" data-t="dark">🌙 Тёмная</button></div>
-  <p class="hint stN" hidden>Сейчас действует праздничная тема: она всегда тёмная. Ваш выбор сохранится и применится после праздника.</p>
-  <h3 style="margin-top:30px">Праздники</h3><p class="hint">Тематические оформления сайта.</p>
-  <div class="blurbox hol"><div class="txt" aria-hidden="true"><button type="button" class="hbtn" tabindex="-1"><span>🎃</span>Хэллоуин</button><button type="button" class="hbtn" tabindex="-1"><span>🎄</span>Новый год</button><button type="button" class="hbtn" tabindex="-1"><span>🐣</span>Пасха</button><button type="button" class="hbtn" tabindex="-1"><span>☀️</span>Лето</button></div><div class="soon">Скоро</div></div>`;
+  <p class="hint stN" hidden>Сейчас включена праздничная тема: она задаёт свои цвета. Ваш выбор светлой или тёмной темы сохранится и применится без неё.</p>
+  <h3 style="margin-top:30px">Язык</h3><div class="seg"><button type="button" class="stL" data-l="ru">Русский</button><button type="button" class="stL" data-l="en">English</button></div>
+  <h3 style="margin-top:30px">Праздники</h3><p class="hint">Выберите оформление сайта. Выбор сохранится в этом браузере.</p>
+  <div class="hgrid"><button type="button" class="hbtn" data-sp="halloween"><span>🎃</span>Хэллоуин</button><button type="button" class="hbtn" data-sp="newyear"><span>🎄</span>Новый год</button><button type="button" class="hbtn" disabled><span>🐣</span>Пасха<em>Скоро</em></button><button type="button" class="hbtn" disabled><span>☀️</span>Лето<em>Скоро</em></button></div>
+  <p class="hint" style="margin-top:12px"><a href="#" data-sp="off" style="color:var(--p)">Обычное оформление</a> · <a href="#" data-sp="auto" style="color:var(--p)">Автоматически по дате</a></p>`;
 $("#stBox").innerHTML = stHtml;
 document.body.insertAdjacentHTML("beforeend", `<div class="ov" id="stOv" style="z-index:70"><div class="md" style="max-width:560px"><button class="x" onclick="$('#stOv').classList.remove('show')">×</button><h2 style="font-size:24px;margin-bottom:14px">Настройки</h2><div class="stg">${stHtml}</div></div></div>`);
-const syncSet = () => { const r = document.documentElement.dataset; $$(".stT").forEach(b => b.classList.toggle("a", b.dataset.t === (r.theme || "dark"))); $$(".stN").forEach(n => n.hidden = !r.season); };
-document.addEventListener("click", e => { const b = e.target.closest(".stT"); if (b) { setTheme(b.dataset.t); syncSet(); } });
+const syncSet = () => { const r = document.documentElement.dataset; $$(".stT").forEach(b => b.classList.toggle("a", b.dataset.t === (r.theme || "dark"))); $$(".stN").forEach(n => n.hidden = !r.season); $$(".hbtn[data-sp]").forEach(b => b.classList.toggle("on", b.dataset.sp === r.season)); let ll = "ru"; try { ll = localStorage.getItem("lang") || "ru"; } catch (e) {} $$(".stL").forEach(b => b.classList.toggle("a", b.dataset.l === ll)); };
+document.addEventListener("click", e => { const lb = e.target.closest(".stL"); if (lb) { window.setLang && window.setLang(lb.dataset.l); syncSet(); return; } const b = e.target.closest(".stT"); if (b) { setTheme(b.dataset.t); syncSet(); } });
 new MutationObserver(syncSet).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-season"] });
 $("#aSet").onclick = () => { syncSet(); $("#stOv").classList.add("show"); };
 syncSet();
+
+// выбор праздничной темы (настройки)
+document.addEventListener("click", e => { const h = e.target.closest("[data-sp]"); if (!h) return; e.preventDefault(); const v = h.dataset.sp;
+  try { v === "auto" ? localStorage.removeItem("season") : localStorage.setItem("season", v); } catch (x) {} location.reload(); });
 </script>
 </body>
 </html>
